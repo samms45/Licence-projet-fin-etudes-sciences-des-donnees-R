@@ -4,14 +4,14 @@
 Ce projet, mené dans le cadre de ma licence en sciences des données, vise à réaliser une analyse exploratoire approfondie et à développer un modèle statistique explicatif et prédictif en utilisant le langage R. Les résultats de ces analyses et du modèle développé permettront de répondre à des questions de recherche spécifiques et de fournir des informations utiles.
 
 Types d'exemples de questions de recherche qui ont émergé des analyses univariées et bivariées effectuées durant l'étude mais nous reviendrons plus en detaille pour chaque parties:
-1. **Question de recherche :** Quelles sont les 6 emplois les plus demandées ? (Analyse univariée)
-2. **Question de recherche :** Quelles sont les 6 secteurs d’activités les plus rechercher ? (Analyse univariée)
-3. **Question de recherche :** Quel est le type de poste le plus fréquent dans chaque région ? (Analyse bivariée)
-4. **Question de recherche :** Le type de poste recherché est-il indépendant de la région ? (Analyse bivariée)
+- **Question de recherche :** Quelles sont les 6 emplois les plus demandées ? (Analyse univariée)
+- **Question de recherche :** Quelles sont les 6 secteurs d’activités les plus rechercher ? (Analyse univariée)
+- **Question de recherche :** Quel est le type de poste le plus fréquent dans chaque région ? (Analyse bivariée)
+- **Question de recherche :** Le type de poste recherché est-il indépendant de la région ? (Analyse bivariée)
 
 Types d'exemples des questions de recherche suivantes ont émergé du développement et de l'évaluation du modèle statistique :
-5. **Question de recherche :** : existe-t-il une influence statistique entre l’évaluation de l’entreprise et le salaire des employés ? (Modélisation)
-6. **Question de recherche :** Quelle est la précision prédictive du modèle ? (Modélisation)
+- **Question de recherche :** : existe-t-il une influence statistique entre l’évaluation de l’entreprise et le salaire des employés ? (Modélisation)
+- **Question de recherche :** Quelle est la précision prédictive du modèle ? (Modélisation)
 
 ## Analyse Exploratoire des Données (EDA)
 ### Analyse Univariée
