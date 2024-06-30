@@ -3,14 +3,15 @@
 ## L'objectif de l'étude
 Ce projet, mené dans le cadre de ma licence en sciences des données, vise à réaliser une analyse exploratoire approfondie et à développer un modèle statistique explicatif et prédictif en utilisant le langage R. Les résultats de ces analyses et du modèle développé permettront de répondre à des questions de recherche spécifiques et de fournir des informations utiles.
 
-Les questions de recherche suivantes ont émergé des analyses univariées et bivariées effectuées durant l'étude :
-1. **Question de recherche 1 :** Comment la variable X est-elle distribuée dans l'ensemble de données ? (Analyse univariée)
-2. **Question de recherche 2 :** Quelle est la relation entre la variable Y et la variable Z ? (Analyse bivariée)
-3. **Question de recherche 3 :** Y a-t-il des corrélations significatives entre les variables A et B ? (Analyse bivariée)
+Types d'exemples de questions de recherche qui ont émergé des analyses univariées et bivariées effectuées durant l'étude mais nous reviendrons plus en detaille pour chaque parties:
+1. **Question de recherche :** Quelles sont les 6 emplois les plus demandées ? (Analyse univariée)
+2. **Question de recherche :** Quelles sont les 6 secteurs d’activités les plus rechercher ? (Analyse univariée)
+3. **Question de recherche :** Quel est le type de poste le plus fréquent dans chaque région ? (Analyse bivariée)
+4. **Question de recherche :** Le type de poste recherché est-il indépendant de la région ? (Analyse bivariée)
 
-Les questions de recherche suivantes ont émergé du développement et de l'évaluation du modèle statistique :
-4. **Question de recherche 4 :** Quels sont les principaux prédicteurs de la variable cible ? (Modélisation)
-5. **Question de recherche 5 :** Quelle est la précision prédictive du modèle sur les données de test ? (Modélisation)
+Types d'exemples des questions de recherche suivantes ont émergé du développement et de l'évaluation du modèle statistique :
+5. **Question de recherche :** : existe-t-il une influence statistique entre l’évaluation de l’entreprise et le salaire des employés ? (Modélisation)
+6. **Question de recherche :** Quelle est la précision prédictive du modèle ? (Modélisation)
 
 ## Analyse Exploratoire des Données (EDA)
 ### Analyse Univariée
