@@ -13,6 +13,17 @@ Types d'exemples des questions de recherche suivantes ont émergé du développe
 - **Question de recherche :** : existe-t-il une influence statistique entre l’évaluation de l’entreprise et le salaire des employés ? (Modélisation)
 - **Question de recherche :** Quelle est la précision prédictive du modèle ? (Modélisation)
 
+  
+## Déscription des données
+Les données proviennent du site Kaggle, une plateforme web qui organise des compétitions en science des données. L’objectif de cet ensemble de données est d’améliorer la recherche d’emploi, en particulier pour ceux qui ont été touchés par la pandémie. 
+
+### Structure des Données
+Ce dataframe contient 3909 observations et 17 variables :
+- **Observations** : Chaque ligne représente une offre d’emploi spécifique.
+- **Variables** : Chaque colonne représente une caractéristique associée à chaque offre d’emploi. Les variables incluent des informations telles que l’estimation du salaire, l’emplacement, l’évaluation de l’entreprise, la description de l’emploi, et d’autres détails pertinents.
+
+https://www.kaggle.com/datasets/andrewmvd/data-scientist-jobs/data
+
 ## Analyse Exploratoire des Données (EDA)
 ### Analyse Univariée
 L'analyse univariée a été effectuée pour comprendre la distribution et les caractéristiques de chaque variable individuellement. Voici un résumé des principales observations :
