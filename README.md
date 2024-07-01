@@ -24,6 +24,16 @@ Ce dataframe contient 3909 observations et 17 variables :
 
 https://www.kaggle.com/datasets/andrewmvd/data-scientist-jobs/data
 
+
+## Méthodologie
+
+Les étapes de la méthodologie comprennent :
+
+1. **Prétraitement des Données** : Charger, comprendre et nettoyer les données pour assurer leur qualité.
+2. **Analyse Exploratoire des Données (EDA)** : Utiliser des graphiques, des statistiques descriptives et des tests statistiques pour explorer les données, identifier les tendances et les relations entre les variables, et répondre aux questions de recherche.
+3. **Modélisation Statistique** : Développer des modèles prédictifs, tels que des modèles linéaires ou d’autres algorithmes pertinents, pour répondre aux questions de recherche et comparer ces modèles pour évaluer leur performance.
+4. **Interprétation et Recommandations** : Interpréter les résultats de manière approfondie et formuler des recommandations basées sur l'analyse.
+
 ## Analyse Exploratoire des Données (EDA)
 ### Analyse Univariée
 L'analyse univariée a été effectuée pour comprendre la distribution et les caractéristiques de chaque variable individuellement. Voici un résumé des principales observations :
