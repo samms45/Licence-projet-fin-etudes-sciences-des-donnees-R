@@ -25,7 +25,8 @@ Ce dataframe contient 3909 observations et 17 variables :
 https://www.kaggle.com/datasets/andrewmvd/data-scientist-jobs/data
 
 
-# Méthodologie pour ce data et projet
+
+# Méthodologie
 
 Les étapes de la méthodologie comprennent :
 
