@@ -1,7 +1,7 @@
 # Licence-Projet-Fin-Etudes-Sciences-des-Données-R
 
 ## L'objectif de l'étude
-Ce projet, mené dans le cadre de ma licence en sciences des données, vise à réaliser une analyse exploratoire approfondie et à développer un modèle statistique explicatif et prédictif en utilisant le langage R. Les résultats de ces analyses et du modèle développé permettront de répondre à des questions de recherche spécifiques et de fournir des informations utiles.
+Ce projet, réalisé dans le cadre de ma licence en sciences des données, vise à effectuer une analyse exploratoire approfondie et à développer un modèle statistique explicatif et prédictif en utilisant le langage R. À chaque étape du processus, l'accent est mis sur la formulation de questions de recherche pertinentes pour optimiser les données et affiner le modèle. Les résultats de ces analyses et du modèle développé ont permis de répondre à ces questions spécifiques et de fournir des informations précieuses.
 
 Types d'exemples de questions de recherche qui ont émergé des analyses univariées et bivariées effectuées durant l'étude mais nous reviendrons plus en detaille pour chaque parties:
 - **Question de recherche :** Quelles sont les 6 emplois les plus demandées ? (Analyse univariée)
@@ -34,6 +34,27 @@ Les étapes de la méthodologie comprennent :
 2. **Analyse Exploratoire des Données (EDA)** : Utiliser des graphiques, des statistiques descriptives et des tests statistiques pour explorer les données, identifier les tendances et les relations entre les variables, et répondre aux questions de recherche.
 3. **Modélisation Statistique** : Développer des modèles prédictifs, tels que des modèles linéaires ou d’autres algorithmes pertinents, pour répondre aux questions de recherche et comparer ces modèles pour évaluer leur performance.
 4. **Interprétation et Recommandations** : Interpréter les résultats de manière approfondie et formuler des recommandations basées sur l'analyse.
+
+
+## Détails des Étapes
+
+### 1. Prétraitement des Données
+
+Le prétraitement de ces données à consister :
+- Transformer les variables textuelles en catégories ou valeurs numériques.
+- Créer de nouvelles variables et supprimer les données inutiles.
+- Détecter et traiter les anomalies telles que les valeurs manquantes et les lignes dupliquées.
+- Analyser la structure des valeurs manquantes et choisir une méthode appropriée pour les traiter (suppression ou imputation).
+
+Pour plus de détails sur le prétraitement, consultez le notebook [Preprocessing](path_to_notebook).
+
+#### 1.1 Choix de la Méthode approprié 
+
+En anticipant la réalisation d'une régression linéaire simple dans notre analyse ultérieure
+Il est pertinent de se poser la question suivante : une régression linéaire effectuée avec imputation des données manquantes produira-t-elle des résultats significativement différents ou améliorés par rapport à une régression linéaire réalisée après la suppression des données manquantes ? Cette comparaison nous permettra d'évaluer l'impact de l'imputation sur la qualité des résultats et de déterminer si elle constitue une étape bénéfique dans notre processus d'analyse.
+
+Nous avons choisi d'utiliser l'algorithme MICE (Multiple Imputation by Chained Equations) pour gérer les données de type MAR (Missing at Random) et conserver un maximum d’informations tout en minimisant les biais. Cette méthode implémente une approche itérative de l'imputation des données manquantes en utilisant un modèle spécifique pour chaque variable avec des valeurs manquantes.
+
 
 ## Analyse Exploratoire des Données (EDA)
 ### Analyse Univariée
