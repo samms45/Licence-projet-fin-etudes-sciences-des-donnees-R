@@ -50,8 +50,7 @@ Pour plus de détails sur le prétraitement, consultez le notebook [Preprocessin
 
 #### 1.1 Choix de la Méthode approprié 
 
-En anticipant la réalisation d'une régression linéaire simple dans notre analyse ultérieure
-Il est pertinent de se poser la question suivante : une régression linéaire effectuée avec imputation des données manquantes produira-t-elle des résultats significativement différents ou améliorés par rapport à une régression linéaire réalisée après la suppression des données manquantes ? Cette comparaison nous permettra d'évaluer l'impact de l'imputation sur la qualité des résultats et de déterminer si elle constitue une étape bénéfique dans notre processus d'analyse.
+L'une des premières questions soulevées concerne la gestion des valeurs manquantes. En anticipant la réalisation d'une régression linéaire simple dans notre analyse ultérieure, il est pertinent de se poser la question suivante : **une régression linéaire effectuée avec imputation des données manquantes produira-t-elle des résultats significativement différents ou améliorés par rapport à une régression linéaire réalisée après la suppression des données manquantes ?** Cette comparaison nous permettra d'évaluer l'impact de l'imputation sur la qualité des résultats et de déterminer si elle constitue une étape bénéfique dans notre processus d'analyse.
 
 Nous avons choisi d'utiliser l'algorithme MICE (Multiple Imputation by Chained Equations) pour gérer les données de type MAR (Missing at Random) et conserver un maximum d’informations tout en minimisant les biais. Cette méthode implémente une approche itérative de l'imputation des données manquantes en utilisant un modèle spécifique pour chaque variable avec des valeurs manquantes.
 
