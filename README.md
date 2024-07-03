@@ -41,10 +41,10 @@ Les étapes de la méthodologie comprennent :
 ### 1. Prétraitement des Données
 
 Le prétraitement de ces données à consister :
-- Transformer les variables textuelles en catégories ou valeurs numériques.
-- Créer de nouvelles variables et supprimer les données inutiles.
-- Détecter et traiter les anomalies telles que les valeurs manquantes et les lignes dupliquées.
-- Analyser la structure des valeurs manquantes et choisir une méthode appropriée pour les traiter (suppression ou imputation).
+- **Transformation des variables textuelles** : Les variables textuelles ont été converties en catégories ou valeurs numériques adaptées à notre objectif d’analyse.
+- **Création et suppression de variables** : De nouvelles variables ont été créées et les données inutiles supprimées pour améliorer la pertinence de l'ensemble de données.
+- **Détecter et traiter les anomalies** : telles que les valeurs manquantes et les lignes dupliquées.
+- **Analyse des valeurs manquantes** : Nous avons analysé la structure des valeurs manquantes et choisi une méthode appropriée pour les traiter (suppression ou imputation).
 
 Pour plus de détails sur le prétraitement, consultez le notebook [Preprocessing](path_to_notebook).
 
@@ -54,13 +54,24 @@ L'une des premières questions soulevées concerne la gestion des valeurs manqua
 
 Nous avons choisi d'utiliser l'algorithme MICE (Multiple Imputation by Chained Equations) pour gérer les données de type MAR (Missing at Random) et conserver un maximum d’informations tout en minimisant les biais. Cette méthode implémente une approche itérative de l'imputation des données manquantes en utilisant un modèle spécifique pour chaque variable avec des valeurs manquantes.
 
+Pour plus de détails sur l'analyse et la justification de cette approche, veuillez consulter le notebook associé.
 
-## Analyse Exploratoire des Données (EDA)
-### Analyse Univariée
-L'analyse univariée a été effectuée pour comprendre la distribution et les caractéristiques de chaque variable individuellement. Voici un résumé des principales observations :
-- Variable 1 : [Résumé des observations]
-- Variable 2 : [Résumé des observations]
-- ...
+
+### 2. Analyse Exploratoire des Données (EDA)
+Une fois le prétraitement initial achevé, nous entamons l'analyse exploratoire des données (EDA). Cette phase nous permet de visualiser la distribution des variables, d'identifier des tendances significatives, d'explorer les relations entre différentes variables, et de repérer d'éventuelles anomalies. Cela guidera le choix de méthodes d’analyse statistique appropriées, jetant ainsi les bases d’une analyse robuste pour répondre efficacement à nos questions de recherche et formuler des recommandations pertinentes.
+
+#### 2.1 Analyse Univariée pour variables qualitatves: 
+- Visualisation des distributions : Nous utilisons un graphique camemberts (pie charts) pour représenter la distribution des modalités de chaque variable qualitative.
+- Identification des modalités fréquentes : Nous déterminons les modalités les plus fréquentes pour chaque variable e afin de comprendre quelles catégories dominent dans les données.
+
+Cette démarche nous permet de mieux comprendre la distribution des modalités au sein de chaque variable qualitative et de répondre à des questions spécifiques comme :
+- Quelles sont les 6 emplois les plus demandées ?
+- Quelles sont les 6 secteurs d’activités les plus rechercher ?
+
+Pour une analyse plus détaillée et des visualisations supplémentaires, veuillez consulter le notebook associé.
+
+
+
 
 ### Analyse Bivariée
 L'analyse bivariée a été réalisée pour examiner les relations entre paires de variables. Voici un résumé des principales relations observées :
