@@ -97,7 +97,7 @@ Cette démarche nous permet de mieux comprendre les relations entre les variable
 Pour des détails supplémentaires et des visualisations, veuillez consulter le notebook associé.
 
 
-#### 2.2 Analyse Univariée pour Variables Quantitatives
+#### 2.3 Analyse Univariée pour Variables Quantitatives
 
 L'analyse univariée a été effectuée pour comprendre la distribution et les caractéristiques de chaque variable quantitative individuellement.
 
@@ -123,6 +123,26 @@ Cette démarche nous permet de mieux comprendre la distribution des valeurs au s
 Pour des détails supplémentaires et des visualisations, veuillez consulter le notebook associé.
 
 Pour une analyse plus détaillée et des visualisations supplémentaires, veuillez consulter le notebook associé.
+
+
+#### 2.4 Analyse Bivariée pour Variables Quantitatives
+
+Dans cette section, nous explorons les relations entre deux variables quantitatives pour identifier des patterns et des associations significatives :
+
+1. **Graphiques de Dispersion :**
+   - **Diagramme de dispersion :** Ce graphique permet de visualiser la relation entre deux variables quantitatives en plaçant chaque paire de valeurs sur un graphique cartésien. Cela nous permet d'observer la direction, la forme et la force de la relation entre les variables.
+
+2. **Mesures de Corrélation :**
+   - **Coefficient de corrélation de Pearson :** Mesure la force et la direction de la relation linéaire entre deux variables continues. Une valeur proche de 1 indique une corrélation positive forte, -1 une corrélation négative forte, et 0 indique une absence de corrélation linéaire.
+   - **Coefficient de corrélation de Spearman :** Évalue la relation monotone entre deux variables continues. Il est utilisé lorsque la relation entre les variables ne suit pas une distribution normale.
+
+3. **Tests d'Hypothèses :**
+   - **Test de corrélation :** Nous utilisons des tests statistiques pour déterminer si la corrélation observée entre les deux variables est significative. Un seuil de signification de 5 % est souvent utilisé pour évaluer la p-valeur associée.
+
+Cette approche nous permet d'identifier et de quantifier les relations linéaires et non linéaires entre les variables quantitatives, fournissant ainsi des insights cruciaux pour nos analyses et modèles futurs.
+
+Pour plus de détails et des visualisations spécifiques, veuillez vous référer au notebook associé.
+
 
 ### Analyse Bivariée
 L'analyse bivariée a été réalisée pour examiner les relations entre paires de variables. Voici un résumé des principales relations observées :
