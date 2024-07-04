@@ -71,6 +71,30 @@ Cette démarche nous permet de mieux comprendre la distribution des modalités a
 Pour une analyse plus détaillée et des visualisations supplémentaires, veuillez consulter le notebook associé.
 
 
+#### 2.2 Analyse Bivariée pour variables qualitatives :
+
+L'idée ici est d'évaluer la dépendance entre deux variables qualitatives pour identifier des relations significatives, détecter les Redondances et améliorer nos futurs modèles.
+
+- **Visualisation :** Utilisation de "Diagramme en Tuyaux d’Orgue" pour représenter la répartition des catégories, facilitant la compréhension des associations et des différences entre les catégories.
+
+- **Tests d'Indépendance :** Nous utilisons principalement le test du khi-deux pour évaluer l'indépendance entre deux variables. Si les conditions ne sont pas remplies (effectifs théoriques nuls ou < 5), nous optons pour le test exact de Fisher.
+
+* **Hypothèses :**
+    + **H0 (Hypothèse Nulle) :** Les deux variables sont indépendantes (p-valeur ≥ 0,05).
+    + **H1 (Hypothèse Alternative) :** Les deux variables ne sont pas indépendantes (p-valeur < 0,05).
+
+- **Seuil de Signification :** 5 % pour les p-valeurs.
+- **Mesure de l'Association :** En cas de lien significatif, nous utilisons le V de Cramer (0 à 1) pour mesurer l'intensité de l'association.
+
+Cette démarche nous permet de mieux comprendre les relations entre les variables qualitatives et de répondre à des questions spécifiques comme :
+
+* Question 1.1: concernant les variables “types de Postes”, “Régions”
+    + Quel est le type de poste le plus fréquent dans chaque région ?
+    + Existe-t-il des régions où un certain type de poste prédomine par rapport aux autres ?
+    +  Le type de poste recherché est-il indépendant de la région ?
+
+
+Pour des détails supplémentaires et des visualisations, veuillez consulter le notebook associé.
 
 
 ### Analyse Bivariée
