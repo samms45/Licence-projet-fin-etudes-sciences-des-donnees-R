@@ -97,6 +97,33 @@ Cette démarche nous permet de mieux comprendre les relations entre les variable
 Pour des détails supplémentaires et des visualisations, veuillez consulter le notebook associé.
 
 
+#### 2.2 Analyse Univariée pour Variables Quantitatives
+
+L'analyse univariée a été effectuée pour comprendre la distribution et les caractéristiques de chaque variable quantitative individuellement.
+
+*  **Visualisation des distributions :**
+   + **Histogramme :** Cet outil graphique permet de visualiser la distribution des données en les regroupant par intervalles. Il fournit des indications sur la forme de la 
+                       distribution, la présence de modes et d’asymétries.
+   +  **Densité :** Utilisée en conjonction avec l’histogramme, la densité offre une représentation visuelle de la forme globale de la distribution et des variations de densité le long 
+                     de l’axe des valeurs.
+
+
+*  **Statistiques Descriptives :**
+      + **Tendance Globale :** En utilisant des mesures de tendance centrale telles que la moyenne, la médiane et le mode, nous obtenons des indications sur la position centrale des 
+                           données, mettant en lumière la valeur centrale ou la plus fréquente.
+      + **Dispersion :** À travers des mesures de dispersion comme l’écart-type, l’étendue interquartile et le coefficient de variation, nous quantifions la variabilité et la dispersion 
+                     des données, permettant de mieux comprendre la distribution.
+
+Cette approche combinée, avec l’utilisation d’outils graphiques et de statistiques descriptives, nous offre une analyse approfondie des variables quantitatives. Elle facilite la détection de tendances, de modes et de variations significatives dans nos données, essentielles pour formuler des hypothèses et orienter nos analyses futures.
+
+Cette démarche nous permet de mieux comprendre la distribution des valeurs au sein de chaque variable quantitative et de répondre à des questions spécifiques comme :
+- Quelle est la distribution des salaires agrégés dans notre échantillon ?
+- Quels sont les niveaux moyens et les variations de la taille des entreprises ?
+
+Pour des détails supplémentaires et des visualisations, veuillez consulter le notebook associé.
+
+Pour une analyse plus détaillée et des visualisations supplémentaires, veuillez consulter le notebook associé.
+
 ### Analyse Bivariée
 L'analyse bivariée a été réalisée pour examiner les relations entre paires de variables. Voici un résumé des principales relations observées :
 - Relation entre Variable 1 et Variable 2 : [Résumé des observations]
