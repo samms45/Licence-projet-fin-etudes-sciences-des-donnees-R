@@ -150,12 +150,137 @@ L'analyse bivariée a été réalisée pour examiner les relations entre paires 
 - Relation entre Variable 2 et Variable 3 : [Résumé des observations]
 - ...
 
+
+## Modélisation
+
+### Introduction
+Nous cherchons à repondre à cette question centrale : **existe-t-il une influence statistique entre l’évaluation de l’entreprise et le salaire des employés ?**
+Nous avons opté pour un modèle de régression linéaire en raison de sa simplicité et de son interprétabilité
+
+### Développement du Modèle
+L'étape de la modélisation se fait en deux temps. Dans un premier temps, nous cherchons à déterminer quelle méthode de régression donne les meilleurs résultats : avec imputation des données manquantes ou avec suppression de celles-ci. Ensuite, en fonction de la méthode qui donne les meilleurs résultats, nous vérifions si le modèle de régression est fiable en examinant les hypothèses liées aux résidus.
+
+- **Choix du modèle :** Nous avons opté pour un modèle de régression linéaire en raison de sa simplicité et de son interprétabilité, particulièrement adapté pour analyser la relation entre le salaire des employés et l'évaluation de l'entreprise.
+
+### Première Étape : Comparaison des Méthodes de Régression simple avec imputation vs Régression simple avec suppression des données manquantes
+
+#### 1.1 Sélection des Modèles d'Imputation avec la Fonction MICE
+Pour résoudre les problèmes de données manquantes, nous avons utilisé la fonction MICE en explorant différentes méthodes d'imputation adaptées à la nature quantitative des variables.
+
+- **Méthodes d'Imputation Explorées :**
+  - "quadratic"
+  - "rf"
+  - "norm.boot"
+  - "ppm"
+
+
+- **Détermination du Meilleur Ensemble de Données :**
+  - Initialisation de l'argument "m" à 100
+  - Itération de 20 pour l'argument "maxit"
+
+- **Critères de Sélection :**
+  - **Coefficient de Détermination (R²) :** Pour évaluer la proportion de variance expliquée par le modèle.
+
+Les résultats montrent que la méthode 'pmm' offre le R² le plus élevé, particulièrement lors de la 83e itération, suggérant une meilleure adéquation du modèle aux données imputées.
+
+- **Vérification de la Qualité de l'Imputation via une analyse de convergence :**
+  - **Graphiques de Trajectoire (Trace Plots) :** Pour vérifier la stabilité des imputations au fil des itérations. la convergence du processus en examinant la distribution de la 
+                                                 variable explicative imputée et les interactions au fil des itérations.
+
+
+
+### Étape 2 : Comparaison des Modèles avec Données Complètes Imputées et Données après Suppression des Valeurs Manquantes
+Après avoir identifié la méthode d'imputation optimale, nous avons comparé deux ensembles de données pour choisir le meilleur modèle de régression linéaire :
+
+- **Données complètes imputées (jeu 83)**
+- **Données après suppression des valeurs manquantes**
+
+#### 2.1 Critères de Comparaison
+Nous avons utilisé la fonction `glance` du package `broom` pour évaluer les modèles en nous basant sur :
+
+- **Coefficient de Détermination (R²) :** Indique la capacité du modèle à expliquer les variations observées.
+- **Erreur Standard Résiduelle (RSE ou sigma) :** Mesure la précision du modèle.
+- **Critère d'Information d'Akaike (AIC) et Critère d'Information Bayésien (BIC) :** Évaluent l'équilibre entre ajustement et simplicité du modèle.
+
+Les résultats montrent que l'imputation introduit de nouvelles informations et peut rendre le modèle plus complexe. Trouver le bon équilibre entre précision et complexité est essentiel pour obtenir des résultats fiables.
+
+### Étape 3 : Vérification des Hypothèses du Modèle de Régression
+Nous avons vérifié les résidus pour s'assurer que les hypothèses de la régression linéaire sont respectées à la fois sur l'ensemble d'entraînement et sur l'ensemble de test :
+
+#### 3.1 Ensemble d'Entraînement
+- **Normalité des résidus :** Test de Shapiro-Wilk, QQ plot.
+- **Homoscédasticité :** Plots de résidus.
+- **Indépendance des résidus :** Vérification visuelle et tests statistiques.
+- **Absence d'autocorrélation :** Test de Durbin-Watson.
+
+#### 3.2 Ensemble de Test
+- **Normalité des résidus :** Test de Shapiro-Wilk, QQ plot.
+- **Homoscédasticité :** Plots de résidus.
+- **Indépendance des résidus :** Vérification visuelle et tests statistiques.
+- **Absence d'autocorrélation :** Test de Durbin-Watson.
+
+### Conclusion
+Les résultats obtenus après la vérification des résidus sur les ensembles d'entraînement et de test confirment la robustesse et la fiabilité du modèle de régression linéaire. Les hypothèses de la régression étant respectées, nous pouvons interpréter les résultats avec confiance.
+
+Pour des détails supplémentaires et des visualisations, veuillez consulter le notebook associé.
+  
+- **Préparation des Données :**
+  - **Imputation des données manquantes :** Utilisation de l'algorithme MICE pour imputer les valeurs manquantes.
+  - **Suppression des données manquantes :** Élimination des entrées contenant des valeurs manquantes.
+  
+- **Entraînement du modèle :** Le modèle a été entraîné en utilisant les deux jeux de données préparés. Les hyperparamètres du modèle, le cas échéant, ont été optimisés pour chaque méthode.
+
+- **Validation du modèle :** La validation du modèle a été réalisée en utilisant une approche de validation croisée pour assurer la robustesse des résultats. Les performances des modèles ont été évaluées et comparées pour déterminer l'impact de chaque méthode sur la performance du modèle.
+
+#### Deuxième Étape : Vérification de la Fiabilité du Modèle
+- **Évaluation du Modèle :** Une fois la meilleure méthode identifiée, nous procédons à une évaluation approfondie du modèle de régression linéaire.
+  - **Métriques de Performance :** Analyse des performances des modèles en utilisant des métriques telles que le coefficient de détermination (R²), l'erreur quadratique moyenne (RMSE), et la moyenne absolue des erreurs (MAE). Cette analyse permet de comprendre la précision et la fiabilité des prédictions du modèle.
+  
+  - **Hypothèses des Résidus :** Vérification des hypothèses liées aux résidus pour s'assurer que le modèle est fiable :
+    - **Normalité des Résidus :** Utilisation de tests statistiques (comme le test de Shapiro-Wilk) et de visualisations (comme le QQ plot).
+    - **Homoscédasticité :** Vérification de l'égalité des variances des résidus à travers des plots de résidus.
+    - **Absence d'Autocorrélation :** Utilisation de tests comme le test de Durbin-Watson.
+    - **Absence de Multicolinéarité :** Vérification de la multicolinéarité entre les variables explicatives en utilisant le facteur d'inflation de la variance (VIF).
+
+### Conclusion
+L'approche méthodique suivie dans le développement et l'évaluation des modèles nous permet de déterminer si l'imputation des données manquantes améliore la performance du modèle de régression linéaire par rapport à la simple suppression des données manquantes. Les résultats obtenus guideront nos recommandations pour le traitement des valeurs manquantes dans des analyses futures.
+
+### Recommandations
+Sur la base des résultats de notre analyse, nous proposons les recommandations suivantes :
+- **Traitement des Données Manquantes :** Adopter la méthode d'imputation identifiée comme la plus performante.
+- **Amélioration du Modèle :** Suggestions pour améliorer le modèle basé sur l'évaluation des résidus et autres diagnostics.
+
+
+### Développement du Modèle
+Pour répondre aux questions de recherche identifiées, un modèle statistique a été développé. Voici les étapes suivies :
+
+- **Choix du modèle :** Nous avons opté pour un modèle de régression linéaire en raison de sa simplicité et de son interprétabilité, particulièrement adapté pour analyser la relation entre le salaire des employés et l'évaluation de l'entreprise.
+  
+- **Entraînement du modèle :** Le modèle a été entraîné en utilisant les données prétraitées, avec une attention particulière portée aux valeurs manquantes. Deux approches ont été comparées : l'imputation des données manquantes via l'algorithme MICE et la suppression des données manquantes. Cette comparaison permet d'évaluer l'impact de chaque méthode sur la performance du modèle.
+
+- **Validation du modèle :** La validation du modèle a été réalisée en utilisant une approche de validation croisée pour assurer la robustesse des résultats. Les performances des modèles ont été évaluées et comparées pour déterminer l'impact de l'imputation des données manquantes.
+
+- **Évaluation du Modèle :**
+  - Analyse des performances des modèles en utilisant des métriques telles que le coefficient de détermination (R²), l'erreur quadratique moyenne (RMSE), et la moyenne absolue des erreurs (MAE). Cette analyse permet de comprendre la précision et la fiabilité des prédictions du modèle.
+
+### Conclusion
+L'approche méthodique suivie dans le développement et l'évaluation des modèles nous permet de déterminer si l'imputation des données manquantes améliore la performance du modèle de régression linéaire par rapport à la simple suppression des données manquantes. Les résultats obtenus guideront nos recommandations pour le traitement des valeurs manquantes dans des analyses futures.
+
+
 ## Modélisation
 ### Développement du Modèle
 Pour répondre aux questions de recherche identifiées, un modèle statistique a été développé. Voici les étapes suivies :
 - Choix du modèle : [Description]
 - Entraînement du modèle : [Description]
 - Validation du modèle : [Description]
+
+3. **Construction du Modèle :**
+   - Réalisation de la régression linéaire avec les données imputées.
+   - Comparaison avec le modèle construit après suppression des données manquantes.
+
+4. **Évaluation du Modèle :**
+   - Analyse des performances du modèles.
+   - Comparaison des résultats pour déterminer l'impact de l'imputation sur la qualité des prédictions.
 
 ### Résultats du Modèle
 Les résultats du modèle sont les suivants :
