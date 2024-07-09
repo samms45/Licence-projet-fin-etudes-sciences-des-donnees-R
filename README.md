@@ -198,9 +198,42 @@ Nous avons utilisé la fonction `glance` du package `broom` pour évaluer les mo
 - **Erreur Standard Résiduelle (RSE ou sigma) :** Mesure la précision du modèle.
 - **Critère d'Information d'Akaike (AIC) et Critère d'Information Bayésien (BIC) :** Évaluent l'équilibre entre ajustement et simplicité du modèle.
 
-Les résultats montrent que l'imputation introduit de nouvelles informations et peut rendre le modèle plus complexe. Trouver le bon équilibre entre précision et complexité est essentiel pour obtenir des résultats fiables.
 
-### Étape 3 : Vérification des Hypothèses du Modèle de Régression
+### Étape 2 : Validation du Modèle Linéaire - Hypothèses des Résidus
+
+Après avoir choisi la méthode d'imputation optimale et comparé les modèles avec données complètes imputées et avec suppression des valeurs manquantes, nous validons notre modèle de régression linéaire basé sur les données complètes imputées. Cette validation va au-delà des simples métriques de performance et se concentre sur les hypothèses fondamentales du modèle pour garantir la fiabilité et la pertinence des résultats.
+
+#### 2.1 Analyse des Résidus préliminaire
+Nous débutons cette phase en examinant les résidus de la régression. Cette étape cruciale nous permet d'évaluer la pertinence du modèle et de détecter d'éventuelles anomalies.
+
+- **Le constat du Nuage de Points des Résidus cest fait sur  :**
+
+  - Répartition Aléatoire : Nous vérifions l'absence de structure particulière dans le nuage de points des résidus, ce qui suggère que le modèle capture adéquatement la relation entre 
+                            la variable dépendante et la variable indépendante.
+  - Symétrie par rapport à l'Axe des Abscisses : Nous évaluons la symétrie des résidus pour confirmer leur distribution normale, une hypothèse fondamentale pour l'application de tests 
+                                                 statistiques et d'intervalles de confiance.
+    
+- **Vérification des Points Aberrants, Leviers et Influents :**
+
+  - Points Aberrants : Identification via les résidus et la loi de Student. Un résidu significativement élevé indique une observation potentiellement aberrante.
+  - Points Leviers :   Analyse de la matrice de projection avec des seuils spécifiques. Un point est considéré comme levier si la valeur dépasse certains seuils.
+  - Points Influents : Utilisation de la distance de Cook pour évaluer l'influence des observations sur l'estimation des paramètres. Une observation est influente si sa distance de Cook 
+                       est élevée.
+
+#### 2.2 Hypothèses Fondamentales du Modèle
+Pour que les résultats de la régression linéaire soient fiables, certaines hypothèses sur les erreurs doivent être respectées :
+
+- Linéarité : La relation entre la variable indépendante (X) et la variable dépendante (Y) doit être linéaire.
+- Indépendance : Les erreurs doivent être indépendantes entre elles.
+- Homoscédasticité : La variance des erreurs doit être constante à tous les niveaux de la variable indépendante.
+- Normalité : Les erreurs doivent suivre une distribution normale.
+
+
+
+
+
+
+
 Nous avons vérifié les résidus pour s'assurer que les hypothèses de la régression linéaire sont respectées à la fois sur l'ensemble d'entraînement et sur l'ensemble de test :
 
 #### 3.1 Ensemble d'Entraînement
