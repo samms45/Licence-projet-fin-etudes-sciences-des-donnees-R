@@ -39,7 +39,7 @@ L'objectif ici était d'analyser les données et de se poser les questions néce
 
 Pour plus de détails sur le prétraitement, consultez le notebook [Preprocessing](path_to_notebook).
 
-#### 1.1 Choix de la Méthode approprié 
+#### 1.1 Choix de la Méthode approprié pour une imputation
 
 L'une des premières questions soulevées concerne la gestion des valeurs manquantes. En anticipant la réalisation d'une régression linéaire simple dans notre analyse ultérieure, il est pertinent de se poser la question suivante :
 - **une régression linéaire effectuée avec imputation des données manquantes produira-t-elle des résultats significativement différents ou améliorés par rapport à une régression linéaire réalisée après la suppression des données manquantes ?**
@@ -49,6 +49,9 @@ Cette comparaison nous permettra d'évaluer l'impact de l'imputation sur la qual
 Nous avons choisi d'utiliser l'algorithme MICE (Multiple Imputation by Chained Equations) pour gérer les données de type MAR (Missing at Random) et conserver un maximum d’informations tout en minimisant les biais. Cette méthode implémente une approche itérative de l'imputation des données manquantes en utilisant un modèle spécifique pour chaque variable avec des valeurs manquantes.
 
 Pour plus de détails sur l'analyse et la justification de cette approche, veuillez consulter le notebook associé.
+
+
+#### 1.2 Choix de la Méthode approprié pour une imputation
 
 
 ### 2. Analyse Exploratoire des Données (EDA)
