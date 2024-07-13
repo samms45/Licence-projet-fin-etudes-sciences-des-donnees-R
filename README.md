@@ -3,17 +3,7 @@
 ## L'objectif de l'étude
 Ce projet, réalisé dans le cadre de ma licence en sciences des données, vise à effectuer une analyse exploratoire approfondie et à développer un modèle statistique explicatif et prédictif en utilisant le langage R. À chaque étape du processus, l'accent est mis sur la formulation de questions de recherche pertinentes pour optimiser les données et affiner le modèle. Les résultats de ces analyses et du modèle développé ont permis de répondre à ces questions spécifiques et de fournir des informations précieuses.
 
-Types d'exemples de questions de recherche qui ont émergé des analyses univariées et bivariées effectuées durant l'étude mais nous reviendrons plus en detaille pour chaque parties:
-- **Question de recherche :** Quelles sont les 6 emplois les plus demandées ? (Analyse univariée)
-- **Question de recherche :** Quelles sont les 6 secteurs d’activités les plus rechercher ? (Analyse univariée)
-- **Question de recherche :** Quel est le type de poste le plus fréquent dans chaque région ? (Analyse bivariée)
-- **Question de recherche :** Le type de poste recherché est-il indépendant de la région ? (Analyse bivariée)
 
-Types d'exemples des questions de recherche suivantes ont émergé du développement et de l'évaluation du modèle statistique :
-- **Question de recherche :** : existe-t-il une influence statistique entre l’évaluation de l’entreprise et le salaire des employés ? (Modélisation)
-- **Question de recherche :** Quelle est la précision prédictive du modèle ? (Modélisation)
-
-  
 ## Déscription des données
 Les données proviennent du site Kaggle, une plateforme web qui organise des compétitions en science des données. L’objectif de cet ensemble de données est d’améliorer la recherche d’emploi, en particulier pour ceux qui ont été touchés par la pandémie. 
 
@@ -40,7 +30,8 @@ Les étapes de la méthodologie comprennent :
 
 ### 1. Prétraitement des Données
 
-Le prétraitement de ces données à consister :
+L'objectif ici était d'analyser les données et de se poser les questions nécessaires pour les préparer afin qu'elles soient utilisables pour des analyses ultérieures et l'entraînement de modèles. Voici une description générale des principales démarches entreprises lors du prétraitement des données dans ce projet :
+
 - **Transformation des variables textuelles** : Les variables textuelles ont été converties en catégories ou valeurs numériques adaptées à notre objectif d’analyse.
 - **Création et suppression de variables** : De nouvelles variables ont été créées et les données inutiles supprimées pour améliorer la pertinence de l'ensemble de données.
 - **Détecter et traiter les anomalies** : telles que les valeurs manquantes et les lignes dupliquées.
@@ -50,7 +41,10 @@ Pour plus de détails sur le prétraitement, consultez le notebook [Preprocessin
 
 #### 1.1 Choix de la Méthode approprié 
 
-L'une des premières questions soulevées concerne la gestion des valeurs manquantes. En anticipant la réalisation d'une régression linéaire simple dans notre analyse ultérieure, il est pertinent de se poser la question suivante : **une régression linéaire effectuée avec imputation des données manquantes produira-t-elle des résultats significativement différents ou améliorés par rapport à une régression linéaire réalisée après la suppression des données manquantes ?** Cette comparaison nous permettra d'évaluer l'impact de l'imputation sur la qualité des résultats et de déterminer si elle constitue une étape bénéfique dans notre processus d'analyse.
+L'une des premières questions soulevées concerne la gestion des valeurs manquantes. En anticipant la réalisation d'une régression linéaire simple dans notre analyse ultérieure, il est pertinent de se poser la question suivante :
+- **une régression linéaire effectuée avec imputation des données manquantes produira-t-elle des résultats significativement différents ou améliorés par rapport à une régression linéaire réalisée après la suppression des données manquantes ?**
+  
+Cette comparaison nous permettra d'évaluer l'impact de l'imputation sur la qualité des résultats et de déterminer si elle constitue une étape bénéfique dans notre processus d'analyse.
 
 Nous avons choisi d'utiliser l'algorithme MICE (Multiple Imputation by Chained Equations) pour gérer les données de type MAR (Missing at Random) et conserver un maximum d’informations tout en minimisant les biais. Cette méthode implémente une approche itérative de l'imputation des données manquantes en utilisant un modèle spécifique pour chaque variable avec des valeurs manquantes.
 
