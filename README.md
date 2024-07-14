@@ -30,12 +30,14 @@ Les étapes de la méthodologie comprennent :
 
 ### 1. Prétraitement des Données
 
-L'objectif ici était d'analyser les données et de se poser les questions nécessaires pour les préparer afin qu'elles soient utilisables pour des analyses ultérieures et l'entraînement du modèle. Voici une description générale des principales démarches entreprises lors du prétraitement des données dans ce projet :
+L'objectif ici était d'analyser et de se poser les questions nécessaires pour préparer les données afin qu'elles soient utilisables pour des analyses ultérieures et l'entraînement de modèles. Voici une description générale des principales étapes du prétraitement dans ce projet :
 
 - **Transformation des variables textuelles** : Les variables textuelles ont été converties en catégories ou valeurs numériques adaptées à notre objectif d’analyse.
 - **Création et suppression de variables** : De nouvelles variables ont été créées et les données inutiles supprimées pour améliorer la pertinence de l'ensemble de données.
 - **Détecter et traiter les anomalies** : telles que les valeurs manquantes et les lignes dupliquées.
 - **Analyse des valeurs manquantes** : Nous avons analysé la structure des valeurs manquantes et choisi une méthode appropriée pour les traiter (suppression ou imputation).
+- **Gestion des variables qualitatives** : Les variables qualitatives ont été encodées (par exemple, via l'encodage de labels ou l'encodage one-hot) et le nombre de leurs modalités a 
+                                           été géré pour assurer leur pertinence dans les analyses.
 
 Pour plus de détails sur le prétraitement, consultez le notebook [Preprocessing](path_to_notebook).
 
@@ -51,7 +53,38 @@ Nous avons choisi d'utiliser l'algorithme MICE (Multiple Imputation by Chained E
 Pour plus de détails sur l'analyse et la justification de cette approche, veuillez consulter le notebook associé.
 
 
-#### 1.2 Choix de la Méthode approprié pour une imputation
+#### 1.2 Prétraitement Additionnel pour les Modalités Excessives et Rares
+
+Afin de répondre à la complexité identifiée lors de l'analyse exploratoire, nous avons introduit des étapes de prétraitement supplémentaires pour gérer le grand nombre de modalités dans nos variables qualitatives. Ces étapes incluent le regroupement de modalités rares, la fusion de catégories similaires, et l'utilisation de méthodes de réduction de dimension pour les variables qualitatives.
+
+
+**Les variables catégorielles, présentent des défis spécifiques** :
+    - Modalités Rares : Catégories avec peu d'observations, pouvant entraîner des instabilités dans les résultats.
+    - Nombre Élevé de Modalités : Complication des modèles prédictifs due à l'augmentation de la dimension de l'espace des caractéristiques.
+    - Différences de Fréquence : Les disparités importantes de fréquence entre les modalités affectent la prédiction des catégories moins fréquentes.
+
+**Nous avons utilisé deux approches pour résoudre ces problèmes** :
+   - Agrégation Manuelle : Regroupement manuel des modalités similaires basé sur leur rareté et similarité pour simplifier l'analyse.
+   - Classification Ascendante Hiérarchique (CAH) avec Matrice de Dissimilarité de l'Indice de Dice : Cette méthode capture efficacement les similarités entre modalités et s'adapte bien 
+                                                                                                     aux structures des données qualitatives. Nous avons déterminé le nombre de clusters 
+                                                                                                 à l'aide de la Méthode Silhouette, de la Méthode Elbow, et de la Méthode Gap Statistic.
+**Mesures de Validation Interne** :
+
+- Indice de Dunn : Évalue la qualité des clusters en termes de séparation et de compacité.
+- Entropie : Vérifie la pureté des clusters.
+- Moyenne au Sein des Clusters : Indique la compacité à l’intérieur des clusters.
+
+Ces mesures assurent que les clusters formés sont significatifs
+
+
+**Étapes de Gestion des Variables Qualitatives** :
+
+- Examen Initial : Utilisation de la fonction generate_frequency_table pour identifier les problèmes potentiels.
+- Nettoyage Initial : Utilisation de la fonction nettoyer_variable pour supprimer les niveaux indésirables et les valeurs manquantes.
+- Choix de l’Approche de Gestion : Décision entre agrégation manuelle ou automatique selon la complexité de la variable qualitative et les problèmes identifiés.
+
+
+
 
 
 ### 2. Analyse Exploratoire des Données (EDA)
