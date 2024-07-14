@@ -5,7 +5,7 @@ Ce projet, réalisé dans le cadre de ma licence en sciences des données, vise 
 
 
 ## Déscription des données
-Les données proviennent du site Kaggle, une plateforme web qui organise des compétitions en science des données. L’objectif de cet ensemble de données est d’améliorer la recherche d’emploi, en particulier pour ceux qui ont été touchés par la pandémie. 
+Les données proviennent du site Kaggle, une plateforme web qui organise des compétitions en science des données. L’objectif de cet ensemble de données est d’améliorer la recherche d’emploi, en particulier pour ceux qui ont été touchés par la pandémie. J'ai trouvé ce dataset particulièrement intéressant car il couvre l'ensemble des métiers de la data, ce qui permet d'analyser les métiers et secteurs les plus recherchés, un domaine dans lequel je me dirige. 
 
 ### Structure des Données
 Ce dataframe contient 3909 observations et 17 variables :
