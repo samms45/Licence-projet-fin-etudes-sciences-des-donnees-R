@@ -30,7 +30,7 @@ Les étapes de la méthodologie comprennent :
 
 ### 1. Prétraitement des Données
 
-L'objectif ici était d'analyser les données et de se poser les questions nécessaires pour les préparer afin qu'elles soient utilisables pour des analyses ultérieures et l'entraînement de modèles. Voici une description générale des principales démarches entreprises lors du prétraitement des données dans ce projet :
+L'objectif ici était d'analyser les données et de se poser les questions nécessaires pour les préparer afin qu'elles soient utilisables pour des analyses ultérieures et l'entraînement du modèle. Voici une description générale des principales démarches entreprises lors du prétraitement des données dans ce projet :
 
 - **Transformation des variables textuelles** : Les variables textuelles ont été converties en catégories ou valeurs numériques adaptées à notre objectif d’analyse.
 - **Création et suppression de variables** : De nouvelles variables ont été créées et les données inutiles supprimées pour améliorer la pertinence de l'ensemble de données.
