@@ -55,20 +55,20 @@ Pour plus de détails sur l'analyse et la justification de cette approche, veuil
 
 #### 1.2 Prétraitement Additionnel pour les Modalités Excessives et Rares
 
-Afin de répondre à la complexité identifiée lors de l'analyse exploratoire, nous avons introduit des étapes de prétraitement supplémentaires pour gérer le grand nombre de modalités dans nos variables qualitatives. Ces étapes incluent le regroupement de modalités rares, la fusion de catégories similaires, et l'utilisation de méthodes de réduction de dimension pour les variables qualitatives.
+Afin de répondre à la complexité identifiée lors de l'analyse exploratoire, nous avons introduit des étapes de prétraitement supplémentaires pour gérer :
 
+ - Modalités Rares : Catégories avec peu d'observations, pouvant entraîner des instabilités dans les résultats.
+ - Nombre Élevé de Modalités : Complication des modèles prédictifs due à l'augmentation de la dimension de l'espace des caractéristiques.
+ - Différences de Fréquence : Les disparités importantes de fréquence entre les modalités affectent la prédiction des catégories moins fréquentes.
 
-**Les variables catégorielles, présentent des défis spécifiques** :
-    - Modalités Rares : Catégories avec peu d'observations, pouvant entraîner des instabilités dans les résultats.
-    - Nombre Élevé de Modalités : Complication des modèles prédictifs due à l'augmentation de la dimension de l'espace des caractéristiques.
-    - Différences de Fréquence : Les disparités importantes de fréquence entre les modalités affectent la prédiction des catégories moins fréquentes.
+Ces étapes incluent le regroupement de modalités rares, la fusion de catégories similaires, et l'utilisation de méthodes de réduction de dimension pour les variables qualitatives.
+Du coup nous avons utilisé deux approches pour résoudre ces problèmes :
+  - Agrégation Manuelle : Regroupement manuel des modalités similaires basé sur leur rareté et similarité pour simplifier l'analyse.
+  - Classification Ascendante Hiérarchique (CAH) avec Matrice de Dissimilarité de l'Indice de Dice : Cette méthode capture efficacement les similarités entre modalités et s'adapte bien aux structures des données qualitatives. Nous avons déterminé le nombre de clusters  à l'aide de la Méthode Silhouette, de la Méthode Elbow, et de la Méthode Gap Statistic.
 
-**Nous avons utilisé deux approches pour résoudre ces problèmes** :
-   - Agrégation Manuelle : Regroupement manuel des modalités similaires basé sur leur rareté et similarité pour simplifier l'analyse.
-   - Classification Ascendante Hiérarchique (CAH) avec Matrice de Dissimilarité de l'Indice de Dice : Cette méthode capture efficacement les similarités entre modalités et s'adapte bien 
-                                                                                                     aux structures des données qualitatives. Nous avons déterminé le nombre de clusters 
-                                                                                                 à l'aide de la Méthode Silhouette, de la Méthode Elbow, et de la Méthode Gap Statistic.
 **Mesures de Validation Interne** :
+
+Une fois que nous avons ddéterminer le nombre optimal de clusters lors du clustering. Des mesures de validation interne sont appliquées pour évaluer la qualité des clusters formés. Ces mesures de validation interne sont complémentaires et permettent de confirmer la pertinence du nombre de clusters choisi ainsi que la qualité du clustering.
 
 - Indice de Dunn : Évalue la qualité des clusters en termes de séparation et de compacité.
 - Entropie : Vérifie la pureté des clusters.
