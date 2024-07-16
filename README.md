@@ -57,14 +57,14 @@ Pour plus de détails sur l'analyse et la justification de cette approche, veuil
 
 Afin de répondre à la complexité identifiée lors de l'analyse exploratoire, nous avons introduit des étapes de prétraitement supplémentaires pour gérer :
 
- - Modalités Rares : Catégories avec peu d'observations, pouvant entraîner des instabilités dans les résultats.
- - Nombre Élevé de Modalités : Complication des modèles prédictifs due à l'augmentation de la dimension de l'espace des caractéristiques.
- - Différences de Fréquence : Les disparités importantes de fréquence entre les modalités affectent la prédiction des catégories moins fréquentes.
+ - **Modalités Rares** : Catégories avec peu d'observations, pouvant entraîner des instabilités dans les résultats.
+ - **Nombre Élevé de Modalités** : Complication des modèles prédictifs due à l'augmentation de la dimension de l'espace des caractéristiques.
+ - **Différences de Fréquence** : Les disparités importantes de fréquence entre les modalités affectent la prédiction des catégories moins fréquentes.
 
 Ces étapes incluent le regroupement de modalités rares, la fusion de catégories similaires, et l'utilisation de méthodes de réduction de dimension pour les variables qualitatives.
 Du coup nous avons utilisé deux approches pour résoudre ces problèmes :
-  - Agrégation Manuelle : Regroupement manuel des modalités similaires basé sur leur rareté et similarité pour simplifier l'analyse.
-  - Classification Ascendante Hiérarchique (CAH) avec Matrice de Dissimilarité de l'Indice de Dice : Cette méthode capture efficacement les similarités entre modalités et s'adapte bien aux structures des données qualitatives. Nous avons déterminé le nombre de clusters  à l'aide de la Méthode Silhouette, de la Méthode Elbow, et de la Méthode Gap Statistic.
+  - **Agrégation Manuelle** : Regroupement manuel des modalités similaires basé sur leur rareté et similarité pour simplifier l'analyse.
+  - **Classification Ascendante Hiérarchique (CAH) avec Matrice de Dissimilarité de l'Indice de Dice** : Cette méthode capture efficacement les similarités entre modalités et s'adapte bien aux structures des données qualitatives. Nous avons déterminé le nombre de clusters  à l'aide de la Méthode Silhouette, de la Méthode Elbow, et de la Méthode Gap Statistic.
 
 **Mesures de Validation Interne** :
 
@@ -174,21 +174,15 @@ Cette approche nous permet d'identifier et de quantifier les relations linéaire
 Pour plus de détails et des visualisations spécifiques, veuillez vous référer au notebook associé.
 
 
-### Analyse Bivariée
-L'analyse bivariée a été réalisée pour examiner les relations entre paires de variables. Voici un résumé des principales relations observées :
-- Relation entre Variable 1 et Variable 2 : [Résumé des observations]
-- Relation entre Variable 2 et Variable 3 : [Résumé des observations]
-- ...
-
 
 ## Modélisation
 
-### Introduction
 Nous cherchons à repondre à cette question centrale : **existe-t-il une influence statistique entre l’évaluation de l’entreprise et le salaire des employés ?**
+
 Nous avons opté pour un modèle de régression linéaire en raison de sa simplicité et de son interprétabilité
 
 ### Développement du Modèle
-L'étape de la modélisation se fait en deux temps. Dans un premier temps, nous cherchons à déterminer quelle méthode de régression donne les meilleurs résultats : avec imputation des données manquantes ou avec suppression de celles-ci. Ensuite, en fonction de la méthode qui donne les meilleurs résultats, nous vérifions si le modèle de régression est fiable en examinant les hypothèses liées aux résidus.
+L'étape de la modélisation se déroule en deux phases. Dans un premier temps, nous cherchons à déterminer quelle méthode de régression donne les meilleurs résultats : l'imputation des données manquantes ou la suppression de celles-ci. Ensuite en fonction de la méthode qui produit les meilleurs résultats, nous vérifions la fiabilité du modèle de régression en examinant les hypothèses liées aux résidus.
 
 - **Choix du modèle :** Nous avons opté pour un modèle de régression linéaire en raison de sa simplicité et de son interprétabilité, particulièrement adapté pour analyser la relation entre le salaire des employés et l'évaluation de l'entreprise.
 
@@ -198,25 +192,6 @@ L'étape de la modélisation se fait en deux temps. Dans un premier temps, nous 
 Pour résoudre les problèmes de données manquantes, nous avons utilisé la fonction MICE en explorant différentes méthodes d'imputation adaptées à la nature quantitative des variables.
 Nous avons initialiser trois argument important de cette fonction. Pour identifier le meilleur ensemble de données pour une méthode et choisir la meilleure méthode, nous 
 utiliserons la métrique R² (coefficient de détermination) du modèle linéaire. Enfin pour la qualité de l'imputation nous avons examiné la convergence du processus. Cette évaluation implique l'analyse du comportement de la distribution de notre variable explicative imputée et l'observation des interactions au fil des itérations.
-
-- Argument
-
-- **Méthodes d'Imputation Explorées :**
-  - "quadratic"
-  - "rf"
-  - "norm.boot"
-  - "ppm"
-
-- **Détermination du Meilleur Ensemble de Données :**
-  - Initialisation de l'argument "m" à 100
-  - Itération de 20 pour l'argument "maxit"
-
-- **Critères de Sélection :**
-  - **Coefficient de Détermination (R²) :** Pour évaluer la proportion de variance expliquée par le modèle.
-
-
-- **Vérification de la Qualité de l'Imputation via une analyse de convergence :**
-  - **Graphiques de Trajectoire (Trace Plots) :** Pour vérifier la stabilité des imputations au fil des itérations. 
 
 
 ### 1.2 : Comparaison du Modèles avec Données Complètes Imputées et Données après Suppression des Valeurs Manquantes
