@@ -1,0 +1,258 @@
+#############################################
+##1. Chargement des Librairies et des Données
+#############################################
+
+
+# librairie utiliser 
+
+library(ggplot2)
+library(gridExtra)  # Pour organiser plusieurs graphiques
+library(stringr)    # gérer les chaines de caractéres
+library("RColorBrewer")  # Fourni une variéte de couleur pour les graphs
+library(MASS) 
+library(car)   # test et graphiques pour regression lineaire
+
+library(cluster)  # pour utiliser des oprerations de clustering (CAH)
+library(factoextra) # Proposes des graphiques pour visuliaser le nombres de clusters optimal 
+library(fpc)      # Fourni des mesures pour évaluer les clusters
+
+library(mice)     # gestion des valeurs manquantes
+library(broom)
+
+
+# chargement des données
+data= read.csv("C:\\Users\\soso3\\Desktop\\Projet Licence\\DataScientist.csv\\DataScientist.csv", header=TRUE, sep=",",na.strings="-1")                           
+
+
+## Compréhension des Données
+
+str(data)  # affichage de la structure interne de l'objet
+
+
+
+
+######################################################################################################################
+######################################################################################################################
+############################################ #####  Etape 1: Prétraitement 1  #######################################
+######################################################################################################################
+######################################################################################################################
+
+
+## Transformation des Variables Chaînes de Caractères 
+
+
+########################################################################################################
+# 1. "Salary.Estimate": Supprimer les lignes qui ne contiennent pas d'information sur le salaire annuel.
+########################################################################################################
+
+## à quoi ressemble ces lignes 
+cat( str_subset(data$ Salary.Estimate,"Per Hour") )                
+
+# Nous indique sous forme de booleen si une ligne contient "Per Hour" ou  pas
+pattern <- str_detect(data$ Salary.Estimate,"Per Hour")    
+
+# Suppression de ces lignes dans le dataframe data. On a conservé tous les TRUE en faisant la négation de pattern
+data=data[!pattern,]                                       
+
+
+cat("verification des lignes supprimer: ", nrow(data))   # initialement 3909
+
+
+#########################################################################
+#  "Salary.Estimate": Éliminer la mention "(Glassdoor est.) et $ et k".
+#########################################################################
+
+data$Salary.Estimate <- gsub("\\(Glassdoor est.\\)|\\$|K", "", data$Salary.Estimate)
+
+# verification que "(Glassdoor est.)" et "$" et "k" sont bien supprimer 
+head(data$Salary.Estimate,3)
+
+
+#####################################################################################
+# "Salary.Estimate"Créer de nouvelles variables "Salaire_Min" et "Salaire_Max"
+###############################################################################
+
+
+# Divise la colonne 'Salary.Estimate' du dataframe 'data' en deux parties (min et max)
+r=str_split(data$Salary.Estimate, "-", simplify = TRUE)
+
+# Affiche les trois premières lignes de la matrice 'r' pour un échantillon des données
+head(r,3)
+
+# permet d'extraire que les valeurs numérique de 0 à 9 de la premiere colonne de 'r'
+min=as.numeric(str_extract(r[,1], "[0-9]+"))      
+max=as.numeric(str_extract(r[,2], "[0-9]+"))
+
+cat("On verifie les premières valeurs de la variable 'min': ", head(min), "\n" )
+cat("On verifie les premières valeurs de la variable 'min' :", head(max) )
+
+
+data$estima_min=min        # nouvelle variable min dans le data.frame data
+data$estima_max=max        # nouvelle variable max dans le data.frame data
+
+
+# Cela crée une nouvelle colonne "Salaire_Aggrégé" contenant la moyenne de "Salaire_Min" et "Salaire_Max" pour chaque observation.
+data$Salaire_Aggrégé <- rowMeans(data[c("estima_min", "estima_max")], na.rm = TRUE)
+
+
+
+###########################################################
+# 2. Diviser la variable "Location" en "Ville" et "Région"
+#########################################################
+
+ # délimateur par une virgule
+b <- str_split(data$Location, ",", simplify = TRUE)
+
+# Crée la variable "lieu_ville" à partir de la première colonne de la matrice b
+data$lieu_ville <- b[, 1]
+
+# Crée la variable "lieu_region" à partir de la deuxième colonne de la matrice b
+data$lieu_region <- b[, 2]
+
+
+
+########################## 
+# la variable Company.Name
+##########################
+ 
+#  Supprimer la partie "\n..." de la variable "Company.Name" en utilisant gsub
+data$Company.Name <- gsub("[\n][0-9]+[.][0-9]+", "", data$Company.Name)
+
+
+
+########################## 
+# la variable Easy.Apply
+##########################
+
+# Remplacer "NA" par "Unkn" et "True" par "Easy" dans la variable "Easy.Apply" en utilisant str_replace_all
+data$Easy.Apply <- str_replace_all(data$Easy.Apply, c( "True" = "Easy"))
+
+
+
+# Vérifier les dimensions actuelles du dataframe "data" (nombre de lignes et de colonnes)
+
+cat(names(data), "nom des colonnes", "\n")
+cat(nrow(data), "nbres de lignes")
+
+
+
+###################################
+## Élimination des Colonnes inutiles
+####################################
+
+data[ c("X","index" ,"Salary.Estimate", "Job.Description", "Company.Name", "Location", "Headquarters", "Competitors", "Founded", "Industry", 
+         "estima_min", "estima_max","lieu_ville" ) ]= NULL
+
+cat("dimension du nouveau data: ", dim(data), "\n\n" )
+
+colnames(data)
+
+
+##################################################
+## Transformation des Variables Catégorielles
+################################################
+
+
+# Sélectionner les noms des colonnes contenant des données de type caractère (chaînes de caractères)
+chr_column_names <- colnames(data)[sapply(data, is.character)]
+
+
+# Conversion des colonnes caractère en facteurs
+for (var in chr_column_names) {
+  data[[var]] <- as.factor(data[[var]])
+}
+
+# Définir l'ordre des niveaux pour les variables Size et Revenue
+data$Size <- factor(data$Size, levels = c("1 to 50 employees", "51 to 200 employees", "201 to 500 employees",
+                                          "501 to 1000 employees", "1001 to 5000 employees", "5001 to 10000 employees",
+                                          "10000+ employees", "Unknown"), ordered = TRUE)
+
+data$Revenue <- factor(data$Revenue, levels = c("Less than $1 million (USD)", "$1 to $5 million (USD)",
+                                                "$5 to $10 million (USD)", "$10 to $25 million (USD)",
+                                                "$25 to $50 million (USD)", "$50 to $100 million (USD)",
+                                                "$100 to $500 million (USD)", "$500 million to $1 billion (USD)",
+                                                "$1 to $2 billion (USD)", "$2 to $5 billion (USD)",
+                                                "$5 to $10 billion (USD)", "$10+ billion (USD)",
+                                                "Unknown / Non-Applicable"), ordered = TRUE)
+
+
+# On change les noms des poste
+
+colnames(data)= c("nom_poste", "eval_entrep", "taille_entrep", "Type_propriete", "secteur", "revenue_entrep","Easy.Apply",  "Salaire_Aggrégé", "lieu_region" )
+
+# On verifie qu'on a bien changé les classes en facteur et changé les nom des postes
+str(data)
+
+
+
+#########################
+## Nettoyage des Données
+##########################
+
+
+## Gestion des données manquantes
+  
+# Remplacement des valeurs -1 par NA dans la variable "eval_entrep"
+data[data[, 2] == -1, 2] = NA
+
+# Nombre de lignes complètes sans NA
+complete_cases_count <- sum(complete.cases(data))
+cat("Nombre de lignes complètes sans données manquantes : ", complete_cases_count, "\n\n")
+
+# Nombre de lignes contenant des NA
+na_cases_count <- sum(!complete.cases(data))
+cat("Nombre de lignes contenant des données manquantes : ", na_cases_count, "\n\n")
+
+# Proportion des données complètes dans le jeu de données (en pourcentage)
+complete_cases_percent <- (complete_cases_count / nrow(data)) * 100
+cat("Proportion des données complètes dans le jeu de données : ", complete_cases_percent, "%\n\n")
+
+# Proportion des données manquantes dans le jeu de données (en pourcentage)
+na_cases_percent <- (na_cases_count / nrow(data)) * 100
+cat("Proportion des données manquantes dans le jeu de données : ", na_cases_percent, "%\n\n")
+
+# Nombre de valeurs manquantes pour chaque variable
+apply(data, MARGIN = 2, function(x) sum(is.na(x)))
+
+
+library(VIM)
+summary(aggr(data, sortVar = TRUE))
+
+
+######################################
+## Suppression des Valeurs Manquantes
+#####################################
+
+
+# Suppression de la variable "Easy.Apply"
+data$Easy.Apply <- NULL
+
+
+############################################################################
+# On stock les deux variables d'interets avec les Na's pour la modélisation
+############################################################################
+
+data_avec_valeurs_manquantes = data[,c("Salaire_Aggrégé","eval_entrep")]
+
+summary(data_avec_valeurs_manquantes)
+
+# on supprime les valeurs manquantes en fonction de la variable secteur et de eval_entrep
+data <- subset(data, !is.na(data$secteur))    
+data <- subset(data, !is.na(data$eval_entrep)) 
+
+## verification du nombre de valeurs manquantes (NA) dans chaque colonne du dataframe
+sapply(data,function(x) sum(is.na(x)))
+
+## nouvelle structure du data
+str(data)
+
+
+################################################
+## Identifications et Suppressions des doublons
+################################################
+
+doublonstest<-which(duplicated(data))   ##  affichent les lignes admettant des doublons.
+print(doublonstest) 
+
+# suppression des doublons
+data= data[-doublonstest, ]
