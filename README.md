@@ -228,10 +228,10 @@ Nous débutons cette phase en examinant les résidus de la régression. Cette é
 #### 2.2 Hypothèses Fondamentales du Modèle
 Pour que les résultats de la régression linéaire soient fiables, certaines hypothèses sur les erreurs doivent être respectées :
 
-- Linéarité : La relation entre la variable indépendante (X) et la variable dépendante (Y) doit être linéaire.
-- Indépendance : Les erreurs doivent être indépendantes entre elles.
-- Homoscédasticité : La variance des erreurs doit être constante à tous les niveaux de la variable indépendante.
-- Normalité : Les erreurs doivent suivre une distribution normale.
+- **Linéarité** : La relation entre la variable indépendante (X) et la variable dépendante (Y) doit être linéaire.
+- **Indépendance** : Les erreurs doivent être indépendantes entre elles.
+- **Homoscédasticité** : La variance des erreurs doit être constante à tous les niveaux de la variable indépendante.
+- **Normalité** : Les erreurs doivent suivre une distribution normale.
 
 
 
