@@ -3,7 +3,7 @@
 #############################################
 
 
-# librairie utiliser 
+# librairie utilisée
 
 library(ggplot2)
 library(gridExtra)  # Pour organiser plusieurs graphiques
@@ -14,7 +14,7 @@ library(car)   # test et graphiques pour regression lineaire
 
 library(cluster)  # pour utiliser des oprerations de clustering (CAH)
 library(factoextra) # Proposes des graphiques pour visuliaser le nombres de clusters optimal 
-library(fpc)      # Fourni des mesures pour évaluer les clusters
+library(fpc)        # Fourni des mesures pour évaluer les clusters
 
 library(mice)     # gestion des valeurs manquantes
 library(broom)
@@ -177,82 +177,11 @@ data$Revenue <- factor(data$Revenue, levels = c("Less than $1 million (USD)", "$
 
 
 # On change les noms des poste
-
 colnames(data)= c("nom_poste", "eval_entrep", "taille_entrep", "Type_propriete", "secteur", "revenue_entrep","Easy.Apply",  "Salaire_Aggrégé", "lieu_region" )
+
 
 # On verifie qu'on a bien changé les classes en facteur et changé les nom des postes
 str(data)
 
 
 
-#########################
-## Nettoyage des Données
-##########################
-
-
-## Gestion des données manquantes
-  
-# Remplacement des valeurs -1 par NA dans la variable "eval_entrep"
-data[data[, 2] == -1, 2] = NA
-
-# Nombre de lignes complètes sans NA
-complete_cases_count <- sum(complete.cases(data))
-cat("Nombre de lignes complètes sans données manquantes : ", complete_cases_count, "\n\n")
-
-# Nombre de lignes contenant des NA
-na_cases_count <- sum(!complete.cases(data))
-cat("Nombre de lignes contenant des données manquantes : ", na_cases_count, "\n\n")
-
-# Proportion des données complètes dans le jeu de données (en pourcentage)
-complete_cases_percent <- (complete_cases_count / nrow(data)) * 100
-cat("Proportion des données complètes dans le jeu de données : ", complete_cases_percent, "%\n\n")
-
-# Proportion des données manquantes dans le jeu de données (en pourcentage)
-na_cases_percent <- (na_cases_count / nrow(data)) * 100
-cat("Proportion des données manquantes dans le jeu de données : ", na_cases_percent, "%\n\n")
-
-# Nombre de valeurs manquantes pour chaque variable
-apply(data, MARGIN = 2, function(x) sum(is.na(x)))
-
-
-library(VIM)
-summary(aggr(data, sortVar = TRUE))
-
-
-######################################
-## Suppression des Valeurs Manquantes
-#####################################
-
-
-# Suppression de la variable "Easy.Apply"
-data$Easy.Apply <- NULL
-
-
-############################################################################
-# On stock les deux variables d'interets avec les Na's pour la modélisation
-############################################################################
-
-data_avec_valeurs_manquantes = data[,c("Salaire_Aggrégé","eval_entrep")]
-
-summary(data_avec_valeurs_manquantes)
-
-# on supprime les valeurs manquantes en fonction de la variable secteur et de eval_entrep
-data <- subset(data, !is.na(data$secteur))    
-data <- subset(data, !is.na(data$eval_entrep)) 
-
-## verification du nombre de valeurs manquantes (NA) dans chaque colonne du dataframe
-sapply(data,function(x) sum(is.na(x)))
-
-## nouvelle structure du data
-str(data)
-
-
-################################################
-## Identifications et Suppressions des doublons
-################################################
-
-doublonstest<-which(duplicated(data))   ##  affichent les lignes admettant des doublons.
-print(doublonstest) 
-
-# suppression des doublons
-data= data[-doublonstest, ]
