@@ -2,7 +2,6 @@
 ##1. Chargement des Librairies et des Données
 #############################################
 
-
 # librairie utilisée
 
 library(ggplot2)
@@ -12,22 +11,20 @@ library("RColorBrewer")  # Fourni une variéte de couleur pour les graphs
 library(MASS) 
 library(car)   # test et graphiques pour regression lineaire
 
-library(cluster)  # pour utiliser des oprerations de clustering (CAH)
+library(cluster)    # pour utiliser des oprerations de clustering (CAH)
 library(factoextra) # Proposes des graphiques pour visuliaser le nombres de clusters optimal 
 library(fpc)        # Fourni des mesures pour évaluer les clusters
 
-library(mice)     # gestion des valeurs manquantes
+library(mice)       # gestion des valeurs manquantes
 library(broom)
+
 
 
 # chargement des données
 data= read.csv("C:\\Users\\soso3\\Desktop\\Projet Licence\\DataScientist.csv\\DataScientist.csv", header=TRUE, sep=",",na.strings="-1")                           
 
-
 ## Compréhension des Données
-
 str(data)  # affichage de la structure interne de l'objet
-
 
 
 
@@ -135,16 +132,14 @@ cat(names(data), "nom des colonnes", "\n")
 cat(nrow(data), "nbres de lignes")
 
 
-
 ###################################
 ## Élimination des Colonnes inutiles
 ####################################
 
-data[ c("X","index" ,"Salary.Estimate", "Job.Description", "Company.Name", "Location", "Headquarters", "Competitors", "Founded", "Industry", 
+data[ c("X","index" ,"Salary.Estimate", "Job.Description", "Company.Name", "Location", "Headquarters", "Competitors", "Founded", "Industry", Easy.Apply,
          "estima_min", "estima_max","lieu_ville" ) ]= NULL
 
 cat("dimension du nouveau data: ", dim(data), "\n\n" )
-
 colnames(data)
 
 
