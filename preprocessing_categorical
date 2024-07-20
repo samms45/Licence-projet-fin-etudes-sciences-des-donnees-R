@@ -1,27 +1,238 @@
 # Pour résoudre ces problèmes, nous envisageons d'utiliser deux approches principales :
+  
+# 1. Agrégation Manuelle :
+# 2. Classification Ascendante Hiérarchique (CAH) :
 
-## 1. Agrégation Manuelle
-Nous effectuerons une agrégation manuelle des modalités similaires pour simplifier l'analyse tout en préservant les informations essentielles. Cette approche sera utilisée dans les cas où :
-- Les variables qualitatives ont un nombre modéré de modalités.
-- Les modalités rares sont peu fréquentes et peuvent être regroupées sans perdre d'informations significatives.
-- Les catégories similaires peuvent être facilement identifiées et fusionnées de manière logique.
 
-## 2. Classification Ascendante Hiérarchique (CAH)
-Nous opterons pour la Classification Ascendante Hiérarchique (CAH) avec une matrice de dissimilarité basée sur l'indice de Dice. Cette méthode sera appliquée dans les cas où :
-- Les variables qualitatives ont un grand nombre de modalités, rendant l'agrégation manuelle impraticable.
-- Il existe des déséquilibres de fréquence importants entre les modalités.
-- Une approche plus systématique et basée sur des algorithmes est nécessaire pour capturer les similarités complexes entre les modalités.
-- Nous souhaitons déterminer le nombre optimal de clusters à l'aide de méthodes telles que la Méthode Silhouette, la Méthode Elbow, et la Méthode Gap Statistic.
 
-### Pourquoi ces approches ?
-- **Agrégation Manuelle** : Cette méthode est simple et intuitive, permettant un regroupement basé sur des connaissances spécifiques du domaine et des critères logiques.
-- **Classification Ascendante Hiérarchique (CAH)** : Cette méthode capture efficacement les similarités entre modalités et s'adapte bien aux structures des données qualitatives. 
-                                                     Elle permet de gérer un grand nombre de catégories et de déterminer de manière systématique le nombre optimal de clusters.
+## Voici les étapes de gestion des variables qualitatives :
 
-### Mesures de Validation Interne
-Pour évaluer la qualité des clusters formés lors de l’agrégation de modalités, nous utiliserons les mesures de validation interne suivantes :
-- **Indice de Dunn** : Évalue la qualité des clusters en termes de séparation et de compacité.
-- **Entropie** : Vérifie la pureté des clusters.
-- **Moyenne au Sein des Clusters** : Indique la compacité à l’intérieur des clusters.
 
-En utilisant ces mesures, nous garantirons que les clusters résultants sont significatifs et faciliteront la construction de modèles prédictifs fiables.
+########################
+##### Etape 1 ##########
+########################
+
+## Creation d'une fonction qui permet d'identifier des problèmes potentiels,
+## tels que des modalités rares, un grand nombre de modalités ou des différences de fréquence significatives.
+
+
+generate_frequency_table <- function(data, qualitative_variable) {
+  
+  # table() pour compter les occurrences des modalités
+  table_result <- table(data[[qualitative_variable]])
+  
+  # prop.table() pour obtenir les fréquences relatives
+  freq_relatives <- round(prop.table(table_result), 3)
+  
+  # Créer un dataframe avec les effectifs et les fréquences relatives
+  result_dataframe <- data.frame(
+    Modalite = names(table_result),
+    Effectif = as.vector(table_result),
+    Frequence = as.vector(freq_relatives)
+  )
+  
+  # Trier le dataframe par fréquences relatives décroissantes
+  result_dataframe <- result_dataframe[order(result_dataframe$Frequence, decreasing = TRUE), ]
+  
+  return(result_dataframe)
+}
+
+
+########################
+##### Etape 2 ##########
+########################
+
+## Fonction de Nettoyage de Variable Qualitative 
+## Si la fonction `generate_frequency_table` révèle des problèmes, nous utilisons la fonction `nettoyer_variable`pour nettoyer la variable. 
+## Cela comprend la suppression de niveaux indésirables et des valeurs manquantes.
+
+
+nettoyer_variable <- function(data, variable, niveaux_a_supprimer = NULL) {
+  # Supprimer les niveaux indésirables
+  if (!is.null(niveaux_a_supprimer)) {
+    data[[variable]] <- droplevels(data[[variable]], exclude = niveaux_a_supprimer)
+  }
+  
+  # Supprimer les lignes avec des valeurs manquantes dans la variable
+  data <- data[!is.na(data[[variable]]), ]
+  
+  return(data)
+}
+
+
+########################
+##### Etape 3 ##########
+########################
+
+#########################################################
+# Pour une agrégation automatique nous allons faire un CAH.
+##########################################################
+
+# Fonction pour calculer la matrice de dissimilarité basée sur l'indice de Dice
+
+calculate_dice_similarity_matrix <- function(data, variable_name) {
+  # Étape 1 : Sélectionne la variable catégorielle à partir des données
+  variable <- data[[variable_name]]
+  
+  # Étape 2 : Transforme la variable en encodage one-hot
+  encoded_data <- model.matrix(~ variable - 1, data = data)
+  
+  # Étape 3 : Calcule la matrice de dissimilarité (indice de Dice)
+  # on crée une matrice vide de la même taille que les données encodées
+  similarity_matrix <- matrix(0, ncol(encoded_data), ncol(encoded_data))
+  
+  # Nom des lignes et colonnes de la matrice avec les noms des variables
+  rownames(similarity_matrix) <- colnames(similarity_matrix) <- colnames(encoded_data)
+  
+  # on parcour toutes les paires de variables encodées
+  for (i in 1:(ncol(encoded_data) - 1)) {
+    for (j in (i + 1):ncol(encoded_data)) {
+      # Calculez l'indice de Dice entre les deux variables
+      similarity_matrix[i, j] <- similarity_matrix[j, i] <-
+        0.5 * sum((encoded_data[, i] - encoded_data[, j])^2)
+    }
+  }
+
+  # Étape 4 : Transforme la matrice de similarité en matrice de distance
+  distance_matrix <- as.dist(sqrt(similarity_matrix))  # Ajout de la parenthèse autour de sqrt
+  
+  # Étape 5 : Renvoie la matrice de distance
+  return(distance_matrix)
+}
+
+#####################################
+# Fonction choix du nombre de cluster
+#######################################
+
+#### Fonction pour afficher le graphique d'inertie
+
+afficher_graphique_inertie <- function(data, variable) {
+  distance_matrix <- calculate_dice_similarity_matrix(data, variable)
+  arbre.moda <- hclust(distance_matrix, method = "average")
+  
+  # Sous-graphique 1 : Inertie
+  inertie <- sort(arbre.moda$height, decreasing = TRUE)
+  plot(inertie[1:length(inertie)], type = "s", xlab = "Nombre de classes", ylab = "Inertie", main = "Inertie")
+}
+
+
+#### Fonction pour organiser les graphiques
+
+organiser_graphiques <- function(data, variable) {
+  distance_matrix <- calculate_dice_similarity_matrix(data, variable)
+  matrice_sim <- as.matrix(distance_matrix)
+  
+  # le nombre de niveaux de la variable spécifiée
+  k_max <- nlevels(data[[variable]]) - 1
+  
+  # Sous-graphique 2 : Méthode Silhouette
+  optimal_clusters_silhouette <- fviz_nbclust(matrice_sim, FUNcluster = hcut, method = "silhouette", hc_method = "average",
+                                              k.max = k_max)
+  plot2 <- optimal_clusters_silhouette + labs(subtitle = "Silhouette method")
+  
+  # Sous-graphique 3 : Méthode Elbow
+  optimal_clusters_elbow <- fviz_nbclust(matrice_sim, FUNcluster = hcut, method = "wss", hc_method = "average",
+                                         k.max = k_max)
+  plot3 <- optimal_clusters_elbow + geom_vline(xintercept = 4, linetype = 2) + labs(subtitle = "Elbow method")
+  
+  # Sous-graphique 4 : Méthode Gap Statistic
+  optimal_clusters_gap_stat <- fviz_nbclust(matrice_sim, FUNcluster = hcut, method = "gap_stat", nboot = 600, 
+                                            hc_method = "average", k.max = k_max)
+  plot4 <- optimal_clusters_gap_stat + labs(subtitle = "Gap statistic method")
+  
+  # les sous-graphiques en une seule disposition
+  grid.arrange(plot2, plot3, plot4, ncol = 1)
+}
+
+
+#######################
+###  Validation interne
+######################## 
+
+generer_resultats_clustering <- function(data, variable, nbre_choix) {
+  # Calcul la matrice de similarité
+  distance_matrix <- calculate_dice_similarity_matrix(data, variable)
+  
+  # Créer une liste vide pour stocker les résultats
+  result_list <- list()
+  
+  # Créer une deuxième liste vide pour stocker uniquement les stats avec des noms
+  stats_list <- list()
+  
+  # Liste pour stocker les attributs de clustering
+  cluster_list <- list()  
+  
+  
+  for (ap in nbre_choix) {
+    # Créer une partition en clusters de test
+    arbre.moda <- hclust(distance_matrix, method = "average")
+    clustering <- cutree(arbre.moda, k = ap)
+    
+    # les statistiques de validation de clustering
+    stats <- cluster.stats(distance_matrix, clustering)
+    
+    # Créez une sous-liste avec des noms
+    sub_list <- list(nbre_choix = ap, stats = stats, clustering = clustering)  # Inclure les attributs de clustering
+    
+    # Ajout la sous-liste aux listes respectives
+    result_list[[length(result_list) + 1]] <- sub_list
+    stats_list[[length(stats_list) + 1]] <- sub_list$stats
+    cluster_list[[length(cluster_list) + 1]] <- sub_list$clustering
+  }
+  
+  # Créez une matrice vide pour stocker les résultats
+  elements <- c( "average.within", "dunn", "dunn2", "entropy")
+  results_matrix <- matrix(nrow = length(elements), ncol = length(stats_list))
+  
+  # Définir les noms des lignes de la matrice
+  rownames(results_matrix) <- elements
+  
+  # Définir les noms de colonnes en utilisant les valeurs de nbre_choix avec "cluster_"
+  colnames(results_matrix) <- paste("cluster_", as.character(nbre_choix), sep = " ")
+  
+  for (j in 1:length(stats_list)) {
+    stats <- stats_list[[j]]  # Obtenez les statistiques de la liste
+    for (i in 1:length(elements)) {
+      result <- stats[[elements[i]]]
+      results_matrix[i, j] <- result
+    }
+  }
+  
+  return(list(result_list = result_list, stats_list = stats_list, cluster_list = cluster_list, results_matrix = results_matrix))
+}
+
+
+
+##################################################################################
+################### Mettre en application pour chaques variables #################
+################################################################################## 
+
+#################################
+### Pour la variable "lieu_region" : gestion mannuelle
+###################################
+
+frequency_table <- generate_frequency_table(data, "lieu_region")
+print(frequency_table)
+
+# Utilisation de la fonction pour nettoyer la variable taille_entrep
+data <- nettoyer_variable(data, "lieu_region", niveaux_a_supprimer = " United Kingdom")
+
+# Verification 
+cat( "le nombre de region maintenant :", nlevels(data$lieu_region) )    # 3345 obs initial
+cat( "le nombre de ligne maintenant :", nrow(data) )
+
+# Changez les modalités 
+levels(data$lieu_region)[levels(data$lieu_region) %in% c(" AZ", " TX")] <- "sud_Ouest"
+levels(data$lieu_region)[levels(data$lieu_region) %in% c(" CA")]       <- "cote_Ouest"
+levels(data$lieu_region)[levels(data$lieu_region) %in% c(" DE", " FL", " NJ"," NY", " PA")] <- "cote_est"
+levels(data$lieu_region)[levels(data$lieu_region) %in% c(" IL", " OH")] <- "Sud_Ouest"
+
+# Vérifiez les niveaux mis à jour
+cat("On verifie les nouvelles modalites :")
+cat(levels(data$lieu_region))
+
+cat("dimension du data :", dim(data) )
+
+
+
+
