@@ -1,0 +1,211 @@
+####################################################
+### Analyse Univariée pour les variables qualitatives
+####################################################
+
+# nouveau dataframe gardant que les variables qualitatives
+data_quali= data[,c("nom_poste", "taille_entrep", "Type_propriete",  "secteur", "revenue_entrep", "lieu_region")]
+
+#  graphiques en barres horizontales des 6 variables 
+par(mfrow = c(2, 3))
+
+for(i in 1:6) {
+eff= table(data_quali[,i])
+frequence= round(prop.table(eff)*100,2)
+barplot( frequence, main=names(data_quali)[i], horiz=T, col=brewer.pal( n = nlevels(data_quali[,i]) , name = "Spectral") ) 
+
+              }
+
+
+
+#############################################################################
+#### Analyse Bivariée et Tests Statistiques pour Deux Variables Qualitatives** 
+##############################################################################
+
+# Fonction pour effectuer le test du khi2 et calculer le coefficient de Cramer
+test_chi2 <- function(data) {
+  # Créer un data frame pour stocker les résultats
+  resultats <- data.frame(Variable1 = character(0), Variable2 = character(0), Statistique_de_test = numeric(0),
+                          p_valeur = numeric(0), ddl = numeric(0), Effectifs_attendus_sup_5 = logical(0),
+                          p_valeur_fisher = numeric(0), V_de_Cramer = numeric(0))
+
+  # On sélectionne les colonnes contenant des variables qualitatives
+  qual_cols <- names(data)[sapply(data, is.factor)]
+
+  # Itérer sur toutes les paires de variables qualitatives
+  for (i in 1:(length(qual_cols) - 1)) {
+    for (j in (i + 1):length(qual_cols)) {
+      var1 <- qual_cols[i]
+      var2 <- qual_cols[j]
+
+      # On effectue le test du khi2
+      contingency_table <- table(data[[var1]], data[[var2]])
+      chi2_result <- chisq.test(contingency_table)
+
+      # Calcule le coefficient de V de Cramer
+      n <- sum(contingency_table)
+      v_cramer <- sqrt(chi2_result$statistic / (n * (min(dim(contingency_table)) - 1)))
+      
+      #  le test de Fisher
+      fisher_result <- fisher.test(contingency_table, simulate.p.value = TRUE)
+
+      # Stock les résultats dans le data frame
+      resultats <- rbind(resultats, data.frame(Variable1 = var1, Variable2 = var2,
+                                               Statistique_de_test = round(chi2_result$statistic, 2),
+                                               p_valeur_khi2 = round(chi2_result$p.value, 3),
+                                               ddl = chi2_result$parameter,
+                                               Effectifs_attendus_sup_5 = all(chi2_result$expected > 5),
+                                               p_valeur_fisher = round(fisher_result$p.value, 3),
+                                               V_de_Cramer = round(v_cramer, 3)))
+    }
+  }
+
+  return(resultats)
+}
+
+# Utilisation de la fonction
+resultats_khi2 <- test_chi2(data_quali)  # Assurez-vous de remplacer "data_quali" par le nom de votre jeu de données
+
+
+
+# Fonction pour créer un graphique à barres empilées
+creer_graphique_barres <- function(data, x_col, fill_col, title, x_label, y_label) {
+
+  # Création du graphique à barres empilées
+  bar <- ggplot(data, aes_string(x = x_col, fill = fill_col)) +
+    geom_bar(position = "dodge") +  
+    labs(title = title,  # Titre du graphique
+         x = x_label,  # Légende de l'axe des x
+         y = y_label)  # Légende de l'axe des y
+  
+  # Afficher le graphique
+  print(bar)
+}
+
+############################################################
+############### Les questions   ############################
+############################################################
+
+#### Question 1.1: concernant les variables "types de Postes", "Régions"
+
+## Analyse des Distributions Conditionnelles des types de Postes en fonction des régions :** 
+    # - Quel est le type de poste le plus fréquent dans chaque région ? 
+    # - Y a-t-il des variations significatives dans la répartition des types de postes entre les régions ? 
+    # - Existe-t-il des régions où un certain type de poste prédomine par rapport aux autres ? 
+ 
+##Comparaison des Catégories de Postes entre les Régions :** 
+   # - La répartition de certains postes varie-t-elle considérablement d'une région à l'autre ? 
+   # - Quels types de postes sont plus fréquents dans les régions cote_Ouest par rapport aux régions cote_Est ? 
+   # - Existe-t-il des différences significatives dans la répartition des postes data analyste entre les régions ? 
+
+
+#### Question 1.2:  Le type de poste recherché est-il indépendant de la région ?** 
+
+
+
+# Création d'un graphique à barres empilées avec ggplot2
+bar <- ggplot(data, aes(x = lieu_region, fill = nom_poste)) +
+  geom_bar(position = "dodge") +  
+  labs(title = "Diagramme en tuyaux d'orgue du type de poste en fonction de la region",  # Titre du graphique
+       x = "Région",  # Légende de l'axe des x
+y = "Nombre de postes")  # Légende de l'axe des y
+
+# Afficher le graphique
+print(bar)
+
+
+
+# question 2:  
+
+print( subset(resultats_khi2, Variable1=="nom_poste" & Variable2=="lieu_region") )
+
+
+
+
+
+  
+# Question 2.1: Concernant les variables Secteurs d'Activités et Régions**
+# 2.2- Le type de industrie cherché est il indépendant de la région ?**
+  
+
+
+
+# Création d'un graphique à barres empilées avec ggplot2
+bar <- ggplot(data, aes(x = lieu_region, fill = secteur)) +
+  geom_bar(position = "dodge") +  
+  labs(title = "Diagramme en tuyaux d'orgue secteur d'activité en fonction de la region",  # Titre du graphique
+       x = "Région",  # Légende de l'axe des x
+       y = "Secteur")  # Légende de l'axe des y
+
+# Afficher le graphique
+print(bar)
+
+
+
+
+
+
+# question 2:  
+
+print( subset(resultats_khi2, Variable1=="secteur" & Variable2=="lieu_region") ) 
+
+
+
+###########################################################
+#### **Analyse Univariée pour les variables quantitatives**
+###########################################################
+
+# on garde que les variables quantitatives
+data_quanti= data[,c("Salaire_Aggrégé","eval_entrep")]
+
+# graphiques histo et densité des variables quanti
+par(mfrow=c(2,2))
+for (i in 1:length(data_quanti)) {
+  hist(data_quanti[,i], main=names(data_quanti[i]) )
+  plot(density(data_quanti[,i]), main=names(data_quanti)[i])
+  }
+
+
+# statistique de base
+summary(data_quanti)
+
+# calcul les écarts types 
+sd_salaire= sd(data_quanti$Salaire_Aggrégé)
+sd_eval= sd(data_quanti$eval_entrep)
+
+# comparaison relatives
+relative_comparaison = sd_eval/sd_salaire
+
+# Calcul du coefficient de variation
+cv_sal= sd_salaire/mean(data_quanti$Salaire_Aggrégé)
+cv_eval= sd_eval/mean(data_quanti$eval_entrep)
+
+
+# affichage des resultats
+print(paste("Ecart type salaire",sd_salaire) )
+print(paste("Ecart type eval", sd_eval))
+print(paste("CV sal", cv_sal))
+print(paste("CV eval", cv_eval))
+print(paste("comapraison_relative",relative_comparaison))
+
+
+
+###################################################################################
+#### ** Analyse Bivariée et Tests Statistiques pour deux Variables quantitatives**
+##################################################################################
+
+
+# Test de Corrélation de Pearson
+cor_pear= cor.test(data_quanti$eval_entrep, data_quanti$Salaire_Aggrégé, method = "pearson")
+
+# Test de Corrélation de Spearman
+cor_spear= cor.test(data_quanti$eval_entrep, data_quanti$Salaire_Aggrégé, method = "spearman")
+
+# Test de Corrélation de Kendall
+cor_ken= cor.test(data_quanti$eval_entrep, data_quanti$Salaire_Aggrégé, method = "kendall")
+
+#print("l'intensité est:", cor_pear)
+print(cor_pear)
+print(cor_spear)
+print(cor_ken)
+
+
