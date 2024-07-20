@@ -191,7 +191,7 @@ generer_resultats_clustering <- function(data, variable, nbre_choix) {
   colnames(results_matrix) <- paste("cluster_", as.character(nbre_choix), sep = " ")
   
   for (j in 1:length(stats_list)) {
-    stats <- stats_list[[j]]  # Obtenez les statistiques de la liste
+    stats <- stats_list[[j]]  # Obtenir les statistiques de la liste
     for (i in 1:length(elements)) {
       result <- stats[[elements[i]]]
       results_matrix[i, j] <- result
@@ -232,6 +232,177 @@ cat("On verifie les nouvelles modalites :")
 cat(levels(data$lieu_region))
 
 cat("dimension du data :", dim(data) )
+
+
+
+###################################
+### Pour la variable "taille_entrep" : gestion automatique
+####################################
+
+# Appel de la fonction 
+frequency_table <- generate_frequency_table(data, "taille_entrep")
+print(frequency_table)
+
+# Utilisation de la fonction pour nettoyer la variable taille_entrep
+data <- nettoyer_variable(data, "taille_entrep", niveaux_a_supprimer = "Unknown")
+
+# Verification 
+cat( "le nombre de taille_entrep maintenant :", nlevels(data$taille_entrep) )    # on passe de 8 modalité à 7 
+cat( "le nombre de ligne maintenant :", nrow(data) )                             # 3341 obs apres lieu_region
+
+
+
+# Utilisation de la première fonction pour afficher le graphique d'inertie
+afficher_graphique_inertie(data, "taille_entrep")
+
+# Utilisation de la deuxième fonction pour organiser les graphiques
+organiser_graphiques(data, "taille_entrep")
+
+# Utilisation de la fonction pour générer les résultats
+nbre_choix <- c(2,4)
+resultats <- generer_resultats_clustering(data, "taille_entrep", nbre_choix)
+
+# Afficher la matrice finale
+print(resultats$results_matrix)
+print(resultats$cluster_list)
+
+
+# Changez les modalités 
+levels(data$taille_entrep)[levels(data$taille_entrep) %in% c("1 to 50 employees" , "51 to 200 employees")] <- "petite"
+levels(data$taille_entrep)[levels(data$taille_entrep) %in% c("201 to 500 employees", "501 to 1000 employees" )] <- "moyenne"
+levels(data$taille_entrep)[levels(data$taille_entrep) %in% c("1001 to 5000 employees", "5001 to 10000 employees")] <- "grande"
+levels(data$taille_entrep)[levels(data$taille_entrep) %in% c("10000+ employees")] <- "tres_grande"
+
+# Vérifiez les niveaux mis à jour
+print(levels(data$taille_entrep))
+
+
+
+####################################  
+## Pour la variable "Type_propriete" : gestion automatique
+####################################
+
+frequency_table <- generate_frequency_table(data, "Type_propriete")
+print(frequency_table)
+
+# Utilisation de la première fonction pour afficher le graphique d'inertie
+afficher_graphique_inertie(data, "Type_propriete")
+
+# Utilisation de la deuxième fonction pour organiser les graphiques
+organiser_graphiques(data, "Type_propriete")
+
+
+# Utilisation de la fonction pour générer les résultats
+nbre_choix <- c(2,3,4,10)
+resultats <- generer_resultats_clustering(data, "Type_propriete", nbre_choix)
+
+# Afficher la matrice finale
+print(resultats$results_matrix)
+print(resultats$cluster_list)
+
+
+# Changez les modalités 
+levels(data$Type_propriete)[levels(data$Type_propriete) %in% "Company - Private" ] <- "privee"
+levels(data$Type_propriete)[levels(data$Type_propriete) %in% "Company - Public" ] <- "publique"
+
+# restes des variables
+levels(data$Type_propriete)[c(1, 4:14)] <- "autres"
+
+# Vérifiez les niveaux mis à jour
+print(levels(data$Type_propriete))
+
+
+
+####################################
+###Pour la variable "revenue_entrep" : gestion manuelle
+###################################
+
+frequency_table <- generate_frequency_table(data, "revenue_entrep")
+print(frequency_table)
+
+# Changez les modalités 
+levels(data$revenue_entrep)[levels(data$revenue_entrep) %in% "Unknown / Non-Applicable"] <- "inconnue"
+levels(data$revenue_entrep)[levels(data$revenue_entrep) %in% "$10+ billion (USD)"] <- "+10B"
+
+levels(data$revenue_entrep)[c(8:11)] <- "500M à 10B"
+levels(data$revenue_entrep)[c(6:7)] <- "50M à 500M"
+levels(data$revenue_entrep)[c(1:5)] <- "-1M à 50M"
+
+# Vérifiez les niveaux mis à jour
+print(levels(data$revenue_entrep))
+
+
+
+##############################
+### Pour la variable "secteur : gestion manuelle
+##############################
+
+frequency_table <- generate_frequency_table(data, "secteur")
+print(frequency_table)
+
+# Changez les noms des modalités
+levels(data$secteur)[levels(data$secteur) %in% "Information Technology"] <- "technologie_infor"
+levels(data$secteur)[levels(data$secteur) %in% "Business Services"] <- "services"
+levels(data$secteur)[levels(data$secteur) %in% c("Biotech & Pharmaceuticals", "Health Care")] <- "Sciences_Sante"
+levels(data$secteur)[levels(data$secteur) %in% c("Finance", "Insurance" )] <- "finance-assurance"
+
+# Liste des catégories à conserver
+conserver <- c("Sciences_Sante" , "finance-assurance" , "services" , "technologie_infor")
+
+# Récupére les niveaux de la variable depuis dataframe 
+nom_moda <- levels(data$secteur)
+
+# indices des catégories qui ne sont pas dans 'conserver'
+indices_non_conserver <- which(!nom_moda %in% conserver)
+
+# les modalités non conserver dvient autres
+levels(data$secteur)[indices_non_conserver]= "autres"
+
+
+cat("les nouvelles modalites:", levels(data$secteur) )
+
+
+
+###############################
+### Pour la variable "nom_poste : gestion manuelle
+###############################
+
+frequency_table <- generate_frequency_table(data, "nom_poste")
+print( head(frequency_table,10) )
+
+# Convertir le facteur en caractère
+data$nom_poste <- as.character(data$nom_poste)
+
+# Remplacer les modalités contenant "analyst" par "data_analyst"
+data$nom_poste  <- gsub(".*analyst.*", "data_analyst", data$nom_poste , ignore.case = TRUE)
+
+# Remplacer les modalités contenant "scientist" par "data_scientist"
+data$nom_poste  <- gsub(".*scientist.*", "data_scientist", data$nom_poste , ignore.case = TRUE)
+
+# Remplacer les modalités contenant "Engineer" par "data_engineer"
+data$nom_poste  <- gsub(".*engineer.*", "data_engineer", data$nom_poste , ignore.case = TRUE)
+
+
+# Convertir la variable 'nom_poste' en facteur
+data$nom_poste <- as.factor(data$nom_poste)
+
+# afficher le nombre de niveaux (modalités) de la variable 'nom_poste'
+cat("le nombre de modalités apres modification : ", nlevels(data$nom_poste), "\n\n")
+
+# Obtenir la liste des modalités de 'nom_poste'
+nom_moda = levels(data$nom_poste)
+
+# Creation d'un vecteur logique pour les modalités à conserver
+modalité_garder <- nom_moda == "data_scientist" | nom_moda == "data_analyst" | nom_moda == "data_engineer"
+
+# Remplacer les modalités qui ne sont pas à conserver par "autres"
+levels(data$nom_poste)[!modalité_garder] <- "autres"
+
+# verifier
+cat("Verification finale :",levels(data$nom_poste))
+
+
+
 
 
 
