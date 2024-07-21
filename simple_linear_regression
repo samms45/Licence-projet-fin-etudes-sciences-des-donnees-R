@@ -1,0 +1,13 @@
+
+########################################
+###  Évaluation Visuelle de la Linéarité 
+########################################
+
+
+# permet de faire hypothèse que la forme de la relation entre les  variables est linéaire
+
+scatterplot( Salaire_Aggrégé~eval_entrep, data= don)  
+
+# la ligne en trait plein est la droite de régression linéaire (définie par la méthode des moindres carrés) entre les deux variables
+# la ligne centrale en pointillé est la courbe de régression locale de type lowess. Elle indique la tendance globale entre les deux variables.
+# Les deux lignes extérieures représentent un intervalle de confiance de la courbe lowess.
