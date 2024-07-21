@@ -1,6 +1,7 @@
-####################################################
-### Analyse Univariée pour les variables qualitatives
-####################################################
+
+############################################################################################
+############################ Analyse Univariée pour les variables qualitatives ##############
+##############################################################################################
 
 # nouveau dataframe gardant que les variables qualitatives
 data_quali= data[,c("nom_poste", "taille_entrep", "Type_propriete",  "secteur", "revenue_entrep", "lieu_region")]
@@ -17,11 +18,14 @@ barplot( frequence, main=names(data_quali)[i], horiz=T, col=brewer.pal( n = nlev
 
 
 
-#############################################################################
-#### Analyse Bivariée et Tests Statistiques pour Deux Variables Qualitatives** 
-##############################################################################
+######################################################################################################################
+################## Analyse Bivariée et Tests Statistiques pour Deux Variables Qualitatives ###########################
+#######################################################################################################################
 
-# Fonction pour effectuer le test du khi2 et calculer le coefficient de Cramer
+#################################################"
+### Fonction pour effectuer le test du khi2 et calculer le coefficient de Cramer
+##################################################
+
 test_chi2 <- function(data) {
   # Créer un data frame pour stocker les résultats
   resultats <- data.frame(Variable1 = character(0), Variable2 = character(0), Statistique_de_test = numeric(0),
@@ -66,10 +70,11 @@ test_chi2 <- function(data) {
 resultats_khi2 <- test_chi2(data_quali)  # Assurez-vous de remplacer "data_quali" par le nom de votre jeu de données
 
 
+#########################################################
+##### Fonction pour créer un graphique à barres empilées
+#########################################################
 
-# Fonction pour créer un graphique à barres empilées
 creer_graphique_barres <- function(data, x_col, fill_col, title, x_label, y_label) {
-
   # Création du graphique à barres empilées
   bar <- ggplot(data, aes_string(x = x_col, fill = fill_col)) +
     geom_bar(position = "dodge") +  
@@ -80,6 +85,7 @@ creer_graphique_barres <- function(data, x_col, fill_col, title, x_label, y_labe
   # Afficher le graphique
   print(bar)
 }
+
 
 ############################################################
 ############### Les questions   ############################
@@ -101,51 +107,29 @@ creer_graphique_barres <- function(data, x_col, fill_col, title, x_label, y_labe
 #### Question 1.2:  Le type de poste recherché est-il indépendant de la région ?** 
 
 
+### Reponse 1.1
+# Appel de la fonction pour le graphique en barre
+creer_graphique_barres(data, "lieu_region", "nom_poste", "Diagramme en tuyaux d'orgue du type de poste en fonction de la région", 
+                        "Région", "Nombre de postes")
 
-# Création d'un graphique à barres empilées avec ggplot2
-bar <- ggplot(data, aes(x = lieu_region, fill = nom_poste)) +
-  geom_bar(position = "dodge") +  
-  labs(title = "Diagramme en tuyaux d'orgue du type de poste en fonction de la region",  # Titre du graphique
-       x = "Région",  # Légende de l'axe des x
-y = "Nombre de postes")  # Légende de l'axe des y
-
-# Afficher le graphique
-print(bar)
-
-
-
-# question 2:  
-
+## Reponse 1.2 
+# Appel de la fonction du taleau 
 print( subset(resultats_khi2, Variable1=="nom_poste" & Variable2=="lieu_region") )
 
 
 
 
-
-  
-# Question 2.1: Concernant les variables Secteurs d'Activités et Régions**
+# Question 2.1: Meme types de questions concernant les variables Secteurs d'Activités et Régions
 # 2.2- Le type de industrie cherché est il indépendant de la région ?**
   
 
+### Réponse 2.1 :
+# Appel de la fonction pour le graphique en barre
+creer_graphique_barres(data, "lieu_region", "secteur", "Diagramme en tuyaux d'orgue secteur d'activité en fonction de la region", 
+                        "Région", "Secteur")
 
 
-# Création d'un graphique à barres empilées avec ggplot2
-bar <- ggplot(data, aes(x = lieu_region, fill = secteur)) +
-  geom_bar(position = "dodge") +  
-  labs(title = "Diagramme en tuyaux d'orgue secteur d'activité en fonction de la region",  # Titre du graphique
-       x = "Région",  # Légende de l'axe des x
-       y = "Secteur")  # Légende de l'axe des y
-
-# Afficher le graphique
-print(bar)
-
-
-
-
-
-
-# question 2:  
-
+### Reponse 2.2  
 print( subset(resultats_khi2, Variable1=="secteur" & Variable2=="lieu_region") ) 
 
 
