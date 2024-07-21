@@ -3,11 +3,147 @@
 ###  Évaluation Visuelle de la Linéarité 
 ########################################
 
-
 # permet de faire hypothèse que la forme de la relation entre les  variables est linéaire
-
 scatterplot( Salaire_Aggrégé~eval_entrep, data= don)  
 
 # la ligne en trait plein est la droite de régression linéaire (définie par la méthode des moindres carrés) entre les deux variables
 # la ligne centrale en pointillé est la courbe de régression locale de type lowess. Elle indique la tendance globale entre les deux variables.
 # Les deux lignes extérieures représentent un intervalle de confiance de la courbe lowess.
+
+
+#######################################################
+### Réalisation d'un modéle régression lineaire simple**
+#######################################################
+
+# Pour déterminer la droite de régression, on ajuste un modèle linéaire simple aux données, à l'aide de la fonction "lm"
+reg= lm(Salaire_Aggrégé ~ eval_entrep, data= don)   
+
+
+#############################
+## Analyse géneral des résidus
+################################
+
+####  les résidus studentisés des oberservations
+par(mfrow=c(1,1))
+plot(rstudent(reg), pch = ".",ylab = "Résidus studentisés par VC")
+abline(h = c(-2,2))
+lines(lowess(rstudent(reg)))
+
+#### compter le nombre observation qui est mal expliquée par le modèle 
+e = rstandard(reg)
+# e[abs(e) > 2]
+length(e[abs(e) > 2])/nrow(data) *100     
+
+
+###################################################################
+#### **Vérification des Points Aberrants, Levier et Influents :** 
+################################################################
+
+par(mfrow=c(1,2))
+
+####  points de levier
+p <- length(reg$coef)
+n <- nrow(data)
+infl.reg <- influence.measures(reg)
+plot(infl.reg$infmat[,"hat"],type="h",ylab="hii", main="Point levier")
+seuil1 <- 3*p/n ; abline(h=seuil1,col=1,lty=2)
+seuil2 <- 2*p/n ; abline(h=seuil2,col=1,lty=3)
+
+seuil1
+seuil2
+length(which(infl.reg$infmat[,"hat"]>seuil1))
+length(which(infl.reg$infmat[,"hat"]>seuil2))
+
+#### points influents
+plot(cooks.distance(reg),type="h",ylab="Distance de Cook", main="distance de cook")
+seuil1 <- qf(0.1,p,n-p) ; abline(h=seuil1)
+
+qf(0.1,p,n-p)   ##  Une distance de Cook en-dessous de fp,n???p(0.1) est considéré comme souhaitable
+qf(0.5,p,n-p)   ##  seuil critique pour la distance de Cook à partir duquel on considère que l'observation est trop influente 
+
+
+
+#########################################################################################################################
+################################################## **Vérification des hypothéses**  ######################################
+###########################################################################################################################
+
+
+########################################################
+### **1- Hypohthése Adequation (Linearité) et Normalité**
+########################################################
+
+par(mfrow=c(1,2))
+
+#### Graphique de l'hypohthése Adequation (Linearité) 
+plot(don$eval_entrep , residuals(reg), pch=16, xlab="xi", ylab="residus", main="variable explicatives vs résidus", cex.main=1)
+lines(lowess(rstudent(reg)), col="red" )
+
+#### Graphique de l'hypohthése de normalité 
+plot(reg,2)
+
+
+# Test statistique d'adequation de Rainbow 
+library(lmtest)
+print( raintest(reg) ) 
+
+# Test statistique Anderson-Darling pour normalité
+library(nortest) 
+# Test d'Anderson-Darling 
+print( ad.test(e) )
+
+
+
+#########################################
+#### **2- Hypothèse d'Homoscédasticité **
+#########################################  
+  
+
+par(mfrow=c(1,2))
+
+prediction= fitted(reg)
+plot( prediction, residuals(reg), pch=16, xlab="prediction", ylab="residus", main="Graph predictions vs résidus", cex.main=1)
+lines(lowess(rstudent(reg)), col="red" )
+
+# Ce graphique à pour meme but que le premier mais on utilise des résidus standardisé pour les mettres à la meme échelle.
+plot(reg,3)
+
+# test Breusch-Pagan
+library(car)
+print( ncvTest(reg) )
+
+
+
+#######################################  
+### **3- Independance des residus**
+#####################################  
+
+  
+par(mfrow=c(1,3))
+
+plot(rstudent(reg),  pch=20, col="blue", type="b", xlab="i", ylab="ei", main="Graph des résidus")
+abline(h=0, col="red", lwd=2)
+
+acf(residuals(reg), main="Graph autocorrélation") 
+pacf(residuals(reg), main="Graph autocorrélation partielle")
+
+
+# test de Durbin-Watson
+library(lmtest)
+print(durbinWatsonTest (reg) )
+
+
+
+#######################
+## Résumer du modéle lm
+#######################
+
+# summary(reg)
+
+library(dplyr)
+
+# Extraire les coefficients de maniere plus élegante
+tidy(reg)
+
+
+
+
