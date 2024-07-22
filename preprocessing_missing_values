@@ -2,6 +2,17 @@
 ###################################### Nettoyage des Données ######################################
 ##################################################################################################
 
+################################################
+## Identifications et Suppressions des doublons
+################################################
+
+doublonstest<-which(duplicated(data))   ##  affichent les lignes admettant des doublons.
+print(doublonstest) 
+
+# suppression des doublons
+data= data[-doublonstest, ]
+
+
 #################################
 ## Gestion des données manquantes
 ################################# 
@@ -32,11 +43,9 @@ apply(data, MARGIN = 2, function(x) sum(is.na(x)))
 library(VIM)
 summary(aggr(data, sortVar = TRUE))
 
+############
 
-############################################################################
-# On stock les deux variables d'interets avec les Na's pour la modélisation
-############################################################################
-
+## On stock les deux variables d'interets AVEC les Na's pour la modélisation 
 data_avec_valeurs_manquantes = data[,c("Salaire_Aggrégé","eval_entrep")]
 summary(data_avec_valeurs_manquantes)
 
@@ -50,22 +59,100 @@ sapply(data,function(x) sum(is.na(x)))
 ## nouvelle structure du data
 str(data)
 
-
-################################################
-## Identifications et Suppressions des doublons
-################################################
-
-doublonstest<-which(duplicated(data))   ##  affichent les lignes admettant des doublons.
-print(doublonstest) 
-
-# suppression des doublons
-data= data[-doublonstest, ]
-
-
-
-
-############################################################################
-# On stock les deux variables d'interets sans les Na's pour la modélisation
-############################################################################
-
+# On stock les deux variables d'interets SANS les Na's pour la modélisation
 data_sans_valeurs_manquantes = data[,c("Salaire_Aggrégé","eval_entrep")]
+
+
+
+#################################################################################
+############  Pré traitement des valeurs manquantes avant modélisation ###########
+##################################################################################
+
+## Application de la fonction mice: 
+## Selection des méthodes d'imputation via à l'impact du du R2 d'une regression simple
+
+methode <- c("rf", "norm.boot", "quadratic", "pmm")
+
+# Initialiser une liste pour stocker les résultats
+results_list <- list()
+
+# Boucle sur chaque méthode
+for (j in 1:length(methode)) {
+  imp <- mice(data_avec_valeurs_manquantes[, c("Salaire_Aggrégé", "eval_entrep")], method = methode[j], m = 100, maxit = 20, seed = 1)
+  fit <- lm.mids(Salaire_Aggrégé ~ eval_entrep, data = imp)
+  
+  # Initialiser un vecteur pour stocker les R²
+  r_squared_values <- numeric(100)
+  
+  # Boucle sur chaque ensemble
+  for (i in 1:100) {
+    # Collecter le R² de chaque ensemble
+    r_squared_values[i] <- summary(fit$analyses[[i]])$r.squared
+  }
+  
+  # Trouver l'indice du meilleur R²
+  best_index <- which.max(r_squared_values)
+  
+  # Stocker les résultats dans la liste
+  results_list[[j]] <- list(method = methode[j], max_r_squared = r_squared_values[best_index], index = best_index)
+  
+  # Afficher les résultats pour chaque méthode
+  cat("Method:", methode[j], "\n")
+  cat("Maximum R-squared:", r_squared_values[best_index], "at index", best_index, "\n\n")
+}
+
+# Afficher les résultats globaux
+cat("Global Results:\n")
+for (j in 1:length(results_list)) {
+  cat("Method:", results_list[[j]]$method, "\n")
+  cat("R-squared:", results_list[[j]]$max_r_squared, "meilleur ensemble", results_list[[j]]$index, "\n\n")
+}
+
+
+
+############################################
+# Inspecter la convergence de l'algorithme
+############################################
+
+## Nous réappliquons la fonction mice pour la garder l'ensemble de données complet qui est l'iteration 83
+imp= mice(data_avec_valeurs_manquantes[,c("Salaire_Aggrégé","eval_entrep")], method="pmm", m=100, maxit=20, seed=1)
+
+# Moyenne et écart type des valeurs synthétiques tracées par rapport au nombre d'itérations des variables ("probeleme fourni que les quanti" vu mean et sd)
+plot(imp, layout = c(2, 1), col = 1:20)
+
+# comparer les distributions des valeurs imputéeset observées pour chacune des variables.
+
+densityplot(imp)
+# Ajouter la légende
+legend("topleft", legend = c("Imputé", "Observé"), col = c("red", "blue"), lty = 1)
+
+
+# stockage du meilleurs ensemble de données de complet imputé
+don = complete(imp,83)
+
+
+
+#################################################################################################################
+## Selection du meilleur modéle de regression linéaire avec données completes imputées et aprres suppression des données manquantes
+##################################################################################################################
+
+# Ajuster un modèle de régression linéaire avec na supprimé
+modele_sans_imp <- lm(Salaire_Aggrégé ~ eval_entrep, data = data_sans_valeurs_manquantes)
+
+# broom::glance pour extraire les statistiques globales
+resume_modele_sans_imp <- glance(modele_sans_imp)
+
+print (resume_modele_sans_imp[c("r.squared", "sigma", "AIC", "BIC")] ) 
+
+# modèle de régression linéaire avec na imputé
+modele_avec_imp <- lm(Salaire_Aggrégé ~ eval_entrep, data = don)
+
+# pour extraire les statistiques globales
+resume_modele_avec_imp <- glance(modele_avec_imp)
+
+print( resume_modele_avec_imp[c("r.squared", "sigma", "AIC", "BIC")] )
+
+
+
+
+
