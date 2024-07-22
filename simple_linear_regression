@@ -97,7 +97,6 @@ print( ad.test(e) )
 #### **2- Hypothèse d'Homoscédasticité **
 #########################################  
   
-
 par(mfrow=c(1,2))
 
 prediction= fitted(reg)
@@ -116,7 +115,6 @@ print( ncvTest(reg) )
 #######################################  
 ### **3- Independance des residus**
 #####################################  
-
   
 par(mfrow=c(1,3))
 
