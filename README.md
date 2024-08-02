@@ -226,17 +226,60 @@ Nous débutons cette phase en examinant les résidus de la régression. Cette é
                        est élevée.
 
 #### 2.2 Hypothèses Fondamentales du Modèle
-Pour que les résultats de la régression linéaire soient fiables, certaines hypothèses sur les erreurs doivent être respectées :
+Pour vérifier ces hypothèses, nous utiliserons des graphiques et des statistiques spécifiques.
+Les résultats de la régression linéaire soient fiables, certaines hypothèses sur les erreurs doivent être respectées :
 
 - **Linéarité** : La relation entre la variable indépendante (X) et la variable dépendante (Y) doit être linéaire.
-- **Indépendance** : Les erreurs doivent être indépendantes entre elles.
+   - **Graphiques** :
+      - *Residuals vs Fitted* : Permet une inspection visuelle de l'absence de structure systématique dans la distribution des résidus par rapport aux valeurs ajustées.
+
+  - **Test** :
+     - *Test de rainbow* : Quantifie la non-linéarité dans le modèle. Un rejet significatif de l'hypothèse nulle suggère une non-linéarité résiduelle, indiquant une possible violation 
+                           de l'adéquation linéaire.
+
+- **Normalité** : Les erreurs doivent suivre une distribution normale.Lors de l’analyse univariée, nous avons observé des queues dans les distributions des variables, suggérant des 
+                  déviations de la normalité, notamment aux extrémités de la distribution.
+    + **Graphique** :
+       - *QQ Plot (Quantile-Quantile Plot)* : Compare les quantiles des résidus avec ceux d’une distribution normale. Des déviations mineures peuvent apparaître significatives en raison 
+                                              de la taille importante de notre échantillon.
+    - **Test** :
+        - *Test d’Anderson-Darling* : Ce test est plus performant que d'autres tests de normalité car il accorde une attention particulière aux déviations dans les queues de 
+                                      distribution. Contrairement à des tests comme le test de Shapiro-Wilk, qui est plus sensible aux déviations dans la partie centrale de la 
+                                      distribution, le test d'Anderson-Darling est plus rigoureux pour détecter les écarts dans les extrémités. Par exemple, si les résidus montrent des 
+                                      queues épaisses (écarts importants aux extrémités), le test d'Anderson-Darling peut détecter ces déviations plus efficacement, fournissant ainsi 
+                                      une évaluation plus précise de la normalité dans des situations où les autres tests pourraient passer à côté des déviations critiques.
+
+
 - **Homoscédasticité** : La variance des erreurs doit être constante à tous les niveaux de la variable indépendante.
-- **Normalité** : Les erreurs doivent suivre une distribution normale.
+    + **Graphique “Residuals vs Fitted Values”** : Ce graphique montre les résidus en fonction des valeurs ajustées. Chaque point représente une observation, et sa position verticale 
+                                                   indique le résidu pour la valeur ajustée correspondante.
+    + **Graphique “Scale-Location”** : Ce graphique représente la racine carrée des valeurs absolues des résidus en fonction des valeurs ajustées (prédictions du modèle).
+   
+    - **Test de Breusch-Pagan** : Évaluer si la variance des résidus est constante à travers les valeurs ajustées. Si la p-valeur associée à la statistique de test est supérieure au 
+                                  seuil de 0,05, nous ne rejetons pas l’hypothèse nulle qui est la variance des résidus est constante (homoscédasticité) et concluons à 
+                                  l’homoscédasticité.
+
+
+  
+- **Indépendance** : Les erreurs doivent être indépendantes entre elles.
+   + **Graphique des Résidus vs Ordre d’Observation** :Trace les résidus en fonction de l’ordre d’observation. L'absence de structure systématique ou de motifs dans le graphique suggère 
+                                                       que les résidus sont indépendants. La présence de motifs pourrait indiquer une dépendance temporelle ou sérielle.
+   + **Autocorrélogramme des Résidus** : Affiche l'autocorrélation des résidus à différents retards (lags). Des barres situées près de zéro indiquent une indépendance des résidus. La 
+                                         présence de barres significatives à certains retards suggère une corrélation sérielle, indiquant une dépendance entre les résidus.
+   +  **Corrélogramme Partiel (PACF Plot)** : Affiche la corrélation partielle entre les résidus à différents retards, en contrôlant les effets des retards intermédiaires.
+                                              Un PACF plot montrant des valeurs proches de zéro pour tous les retards suggère que les résidus sont indépendants. Des pics significatifs à 
+                                              certains retards peuvent indiquer des corrélations sérielles non capturées par les autres outils.
+
+   + **Test de Durbin-Watson** : Évaluer la présence de corrélation sérielle entre les résidus.
+     - *Hypothèse Nulle (H0)* : Les résidus sont indépendants (absence de corrélation sérielle).
+     - *Hypothèse Alternative (H1)* : Les résidus sont corrélés (présence de corrélation sérielle).
+Une statistique proche de 2 indique une absence de corrélation sérielle et donc une indépendance des résidus. Des valeurs significativement inférieures à 2 suggèrent une corrélation positive entre les résidus, tandis que des valeurs significativement supérieures à 2 indiquent une corrélation négative. Si les p-valeurs associées aux tests statistiques montrent des résultats inférieurs à 0,05, cela pourrait indiquer la présence de corrélation sérielle, nécessitant des ajustements ou des modèles alternatifs.
 
 
 
 
 
+Dans notre cas, si la p-valeur est inférieure à un seuil de 0,05, nous rejetterons l’hypothèse nulle selon laquelle les données suivent une distribution normale. Pour vérifier ces hypothèses, nous utiliserons des graphiques comme le QQ plot et des statistiques spécifiques telles que le test d’Anderson-Darling, afin d’évaluer la normalité des résidus et détecter les éventuelles déviations de la distribution normale.
 
 
 Nous avons vérifié les résidus pour s'assurer que les hypothèses de la régression linéaire sont respectées à la fois sur l'ensemble d'entraînement et sur l'ensemble de test :
