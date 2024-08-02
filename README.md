@@ -251,29 +251,34 @@ Les résultats de la régression linéaire soient fiables, certaines hypothèses
 
 
 - **Homoscédasticité** : La variance des erreurs doit être constante à tous les niveaux de la variable indépendante.
-    + **Graphique “Residuals vs Fitted Values”** : Ce graphique montre les résidus en fonction des valeurs ajustées. Chaque point représente une observation, et sa position verticale 
-                                                   indique le résidu pour la valeur ajustée correspondante.
-    + **Graphique “Scale-Location”** : Ce graphique représente la racine carrée des valeurs absolues des résidus en fonction des valeurs ajustées (prédictions du modèle).
+    - **Graphique**
+        - *Residuals vs Fitted Values* : Ce graphique montre les résidus en fonction des valeurs ajustées. Chaque point représente une observation, et sa position verticale 
+                                         indique le résidu pour la valeur ajustée correspondante.
+        - *Graphique “Scale-Location* : Ce graphique représente la racine carrée des valeurs absolues des résidus en fonction des valeurs ajustées (prédictions du modèle).
    
-    - **Test de Breusch-Pagan** : Évaluer si la variance des résidus est constante à travers les valeurs ajustées. Si la p-valeur associée à la statistique de test est supérieure au 
+    - **Test** :
+       - *Test de Breusch-Pagan* : Évaluer si la variance des résidus est constante à travers les valeurs ajustées. Si la p-valeur associée à la statistique de test est supérieure au 
                                   seuil de 0,05, nous ne rejetons pas l’hypothèse nulle qui est la variance des résidus est constante (homoscédasticité) et concluons à 
                                   l’homoscédasticité.
 
 
   
 - **Indépendance** : Les erreurs doivent être indépendantes entre elles.
-   + **Graphique des Résidus vs Ordre d’Observation** :Trace les résidus en fonction de l’ordre d’observation. L'absence de structure systématique ou de motifs dans le graphique suggère 
-                                                       que les résidus sont indépendants. La présence de motifs pourrait indiquer une dépendance temporelle ou sérielle.
-   + **Autocorrélogramme des Résidus** : Affiche l'autocorrélation des résidus à différents retards (lags). Des barres situées près de zéro indiquent une indépendance des résidus. La 
-                                         présence de barres significatives à certains retards suggère une corrélation sérielle, indiquant une dépendance entre les résidus.
-   +  **Corrélogramme Partiel (PACF Plot)** : Affiche la corrélation partielle entre les résidus à différents retards, en contrôlant les effets des retards intermédiaires.
+    - **Graphique** 
+        - Résidus vs Ordre d’Observation* : Trace les résidus en fonction de l’ordre d’observation. L'absence de structure systématique ou de motifs dans le graphique suggère 
+                                                que les résidus sont indépendants. La présence de motifs pourrait indiquer une dépendance temporelle ou sérielle.
+        - *Autocorrélogramme des Résidus* : Affiche l'autocorrélation des résidus à différents retards (lags). Des barres situées près de zéro indiquent une indépendance des résidus. La 
+                                            présence de barres significatives à certains retards suggère une corrélation sérielle, indiquant une dépendance entre les résidus.
+        - *Corrélogramme Partiel (PACF Plot)* : Affiche la corrélation partielle entre les résidus à différents retards, en contrôlant les effets des retards intermédiaires.
                                               Un PACF plot montrant des valeurs proches de zéro pour tous les retards suggère que les résidus sont indépendants. Des pics significatifs à 
                                               certains retards peuvent indiquer des corrélations sérielles non capturées par les autres outils.
-
-   + **Test de Durbin-Watson** : Évaluer la présence de corrélation sérielle entre les résidus.
-     - *Hypothèse Nulle (H0)* : Les résidus sont indépendants (absence de corrélation sérielle).
-     - *Hypothèse Alternative (H1)* : Les résidus sont corrélés (présence de corrélation sérielle).
-Une statistique proche de 2 indique une absence de corrélation sérielle et donc une indépendance des résidus. Des valeurs significativement inférieures à 2 suggèrent une corrélation positive entre les résidus, tandis que des valeurs significativement supérieures à 2 indiquent une corrélation négative. Si les p-valeurs associées aux tests statistiques montrent des résultats inférieurs à 0,05, cela pourrait indiquer la présence de corrélation sérielle, nécessitant des ajustements ou des modèles alternatifs.
+    - **Test**
+        -  *Test de Durbin-Watson* : Évaluer la présence de corrélation sérielle entre les résidus.
+              - *Hypothèse Nulle (H0)* : Les résidus sont indépendants (absence de corrélation sérielle).
+              - *Hypothèse Alternative (H1)* : Les résidus sont corrélés (présence de corrélation sérielle).
+   Une statistique proche de 2 indique une absence de corrélation sérielle et donc une indépendance des résidus. Des valeurs significativement inférieures à 2 suggèrent une corrélation 
+   positive entre les résidus, tandis que des valeurs significativement supérieures à 2 indiquent une corrélation négative. Si les p-valeurs associées aux tests statistiques montrent 
+   des résultats inférieurs à 0,05, cela pourrait indiquer la présence de corrélation sérielle, nécessitant des ajustements ou des modèles alternatifs.
 
 
 
